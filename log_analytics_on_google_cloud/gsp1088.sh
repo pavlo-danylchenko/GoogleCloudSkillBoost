@@ -29,6 +29,17 @@ gcloud logging buckets update _Default \
     --location=global \
     --enable-analytics
 
+# Create a new Log bucket
+# You can use the following steps to create a new log bucket.
+# In the left pane, click Logs storage and then click Create log bucket at the top of the Logs Storage window.
+# Provide a name, such as day2ops-log to the bucket.
+# Check both Upgrade to use Log Analytics and Create a new BigQuery dataset that links to this bucket.
+# Type in a BigQuery dataset name day2ops_log.
+# For the Region field, select the Global option.
+# Selecting Create a linked dataset in BigQuery creates a dataset for you in BigQuery if it does not exist. This lets you run queries in BigQuery.
+# Click Create bucket to create the log bucket.
+# Click Check my progress to verify the objective.
+
 gcloud logging sinks create day2ops-sink \
     logging.googleapis.com/projects/$DEVSHELL_PROJECT_ID/locations/global/buckets/day2ops-log \
     --log-filter='resource.type="k8s_container"' \
