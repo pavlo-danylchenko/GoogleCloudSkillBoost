@@ -4,11 +4,16 @@ set -euo pipefail
 echo "======================================================================"
 echo "                          Task 1. Install Vault"
 echo "======================================================================"
-sudo apt update && sudo apt install -y curl gnupg lsb-release
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+# sudo apt update && sudo apt install -y curl gnupg lsb-release
+# curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
+# sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
+# sudo apt-get update
+# sudo apt-get install vault
+
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-
 sudo apt-get update
 sudo apt-get install vault
 
