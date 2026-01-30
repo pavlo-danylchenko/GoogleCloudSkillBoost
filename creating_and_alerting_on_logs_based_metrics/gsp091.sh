@@ -20,7 +20,7 @@ echo "                  Task 2. Create a log-based alert"
 echo "======================================================================"
 gcloud beta monitoring channels create \
     --type=email \
-    --channel-label=email_address=danilchenko@ukr.net \
+    --channel-labels=email_address=danilchenko@ukr.net \
     --display-name="Email Channel" \
     --description="Channel for VM alerts"
 
@@ -58,14 +58,12 @@ EOF
 
 gcloud monitoring policies create --policy-from-file="email-channel.json"
 
-
-
-gcloud logging metrics create stopped-vm \
-    --description="Metric for stopped VMs" \
-    --log-filter='resource.type="gce_instance" protoPayload.methodName="v1.compute.instances.stop"'
+# gcloud logging metrics create stopped-vm \
+#     --description="Metric for stopped VMs" \
+#     --log-filter='resource.type="gce_instance" protoPayload.methodName="v1.compute.instances.stop"'
 
 echo "Task 3. Create a Docker repository"
-gcloud artifacts repositories create doker-repo --repository-format=docker \
+gcloud artifacts repositories create docker-repo --repository-format=docker \
     --location=$REGION --description="Docker repository" \
     --project=$DEVSHELL_PROJECT_ID
 
@@ -92,6 +90,10 @@ cd gmp_prom_setup
 sed -i "s|<ARTIFACT REGISTRY IMAGE NAME>|$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/docker-repo/flask-telemetry:v1|g" flask_deployment.yaml
 kubectl -n gmp-test apply -f flask_deployment.yaml
 kubectl -n gmp-test apply -f flask_service.yaml
+
+kubectl get services -n gmp-test
+
+curl $(kubectl get services -n gmp-test -o jsonpath='{.items[*].status.loadBalancer.ingress[0].ip}')/metrics
 
 echo "======================================================================"
 echo "                  Task 5. Create a log-based metric"
