@@ -27,11 +27,29 @@ functions.http('helloWorld', (req, res) => {
 });
 EOF
 
+
+# const functions = require('@google-cloud/functions-framework');
+
+# functions.http('helloHttp', (req, res) => {
+#   res.set('Content-Type', 'text/plain');
+#   res.send(`Hello ${req.query.name || req.body.name || 'World'}!`);
+# });
+
+# {
+#   "dependencies": {
+#     "@google-cloud/functions-framework": "^3.0.0"
+#   }
+# }
+
+
 echo "Create a package.json file"
 cat > package.json << EOF
 {
   "name": "helloworld",
   "version": "1.0.0",
+  "engines": {
+    "node": "22"
+  },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.0.0"
   }
@@ -41,7 +59,6 @@ EOF
 gcloud run deploy helloworld \
     --source=. \
     --region=$REGION \
-    --runtime=nodejs22 \
     --allow-unauthenticated \
     --execution-environment=gen2 \
     --max-instances=5
