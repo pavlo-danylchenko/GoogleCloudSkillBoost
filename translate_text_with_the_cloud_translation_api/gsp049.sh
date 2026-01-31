@@ -15,7 +15,7 @@ gcloud alpha services api-keys create \
 
 
 KEY_NAME=$(gcloud alpha services api-keys list --filter="display_name=APIkey" --format="value(name)")
-API_KEY_VALUE=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
+API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
 
 echo "======================================================================"
 echo "                        Task 2. Translate text"
