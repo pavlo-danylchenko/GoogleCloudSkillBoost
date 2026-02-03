@@ -8,14 +8,15 @@ export REGION=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
 
-export ZONE=$(gcloud compute project-info desribe \
+export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 gcloud config set compute/zone $ZONE
 
 gcloud compute instances create gcelab \
-    --region=$REGION \
     --zone=$ZONE \
     --tags=http-server
+gcloud compute firewall-rules create allow-http \
+    --network=default --allow=tcp:80 --target-tags=allow-http
 
 echo "======================================================================"
 echo "                   Task 2. Install an NGINX web server"
