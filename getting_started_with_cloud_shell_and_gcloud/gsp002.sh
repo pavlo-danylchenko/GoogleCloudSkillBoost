@@ -61,12 +61,12 @@ echo "----------------------------------------------------------------------"
 gcloud compute firewall-rules list --filter="NETWORK='default' AND ALLOW='icmp'"
 
 
-echo "======================================================================"
-echo "                   Task 3. Connecting to your VM instance"
-echo "======================================================================"
-gcloud compute ssh gcelab2 --zone=$ZONE --quiet \
-    --command="sudo apt-get update && sudo apt-get install -y nginx \
-    exit"
+# echo "======================================================================"
+# echo "                   Task 3. Connecting to your VM instance"
+# echo "======================================================================"
+# gcloud compute ssh gcelab2 --zone=$ZONE --quiet \
+#     --command="sudo apt-get update && sudo apt-get install -y nginx \
+#     exit"
 
 
 echo "======================================================================"
@@ -83,13 +83,13 @@ gcloud compute firewall-rules create default-allow-http \
 echo "----------------------------------------------------------------------"
 echo "             List the firewall rules for the project"
 echo "----------------------------------------------------------------------"
-gcloud compute firewall-rules list --filter="ALLOW=tcp:80"
+gcloud compute firewall-rules list --filter=ALLOW:'80'
 
 echo "----------------------------------------------------------------------"
 echo "   Verify communication is possible for http to the virtual machine"
 echo "----------------------------------------------------------------------"
-curl http://$(gcloud compute instances list --filter="name=gcelab2" \
-    --format="value(EXTERNAL_IP)")
+# curl http://$(gcloud compute instances list --filter="name=gcelab2" \
+#     --format="value(EXTERNAL_IP)")
 
 
 echo "======================================================================"
