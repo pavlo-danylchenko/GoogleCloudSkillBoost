@@ -104,7 +104,7 @@ gcloud logging logs list
 echo "----------------------------------------------------------------------"
 echo "             View the logs that relate to compute resources"
 echo "----------------------------------------------------------------------"
-gcloud logging logs list -filter="compute"
+gcloud logging logs list --filter="compute"
 
 echo "----------------------------------------------------------------------"
 echo "       Read the logs related to the resource type of gce_instance"
