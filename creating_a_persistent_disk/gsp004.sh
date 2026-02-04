@@ -3,11 +3,11 @@ set -euo pipefail
 
 
 export REGION=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-defaut-region])")
+    --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
 
 export ZONE=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-defaut-zone])")
+    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 gcloud config set compute/zone $ZONE
 
 echo "======================================================================"
