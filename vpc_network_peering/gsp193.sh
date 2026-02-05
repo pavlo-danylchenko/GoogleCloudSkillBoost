@@ -15,7 +15,7 @@ PROJECT_A=$GOOGLE_CLOUD_PROJECT
 PROJECT_B=$(gcloud projects list --format="value(projectId)" --filter="projectId != $PROJECT_A" --limit=1)
 echo "Project A ID: $PROJECT_A"
 echo "Project B ID: $PROJECT_B"
-PROJECTS=("$PROJECT_A" "PROJECT_B")
+PROJECTS=("$PROJECT_A" "$PROJECT_B")
 
 
 # echo "----------------------------------------------------------------------"
