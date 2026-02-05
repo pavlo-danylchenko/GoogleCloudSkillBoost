@@ -10,7 +10,7 @@ gcloud config set compute/region $REGION
 gcloud config set compute/zone $ZONE
 
 echo "======================================================================"
-echo "                     Task 1. Clone the sample code"
+echo "                  Task 1. Create your Node.js application"
 echo "======================================================================"
 cat > server.js << EOF
 var http = require('http');
@@ -89,7 +89,7 @@ kubectl create deployment hello-node \
 echo "----------------------------------------------------------------------"
 echo "                       View the deployment"
 echo "----------------------------------------------------------------------"
-kudectl get deployments
+kubectl get deployments
 
 echo "----------------------------------------------------------------------"
 echo "                 View the pod created by the deployment"
