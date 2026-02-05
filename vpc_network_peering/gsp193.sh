@@ -111,13 +111,15 @@ gcloud compute networks peerings create peer-ba --project $PROJECT_B \
 echo "======================================================================"
 echo "                 Task 3. Test connectivity (OPTIONAL)"
 echo "======================================================================"
-INTERNAL_IP_A=$(gcloud compute instances describe vm-a \
-    --project=$PROJECT_A \
-    --zone=$ZONE_A \
-    --format='get(networkInterfaces[0].networkIP)')
+# INTERNAL_IP_A=$(gcloud compute instances describe vm-a \
+#     --project=$PROJECT_A \
+#     --zone=$ZONE_A \
+#     --format='get(networkInterfaces[0].networkIP)')
 
-echo "Internal IP vm-a: $INTERNAL_IP_A"
+# echo "Internal IP vm-a: $INTERNAL_IP_A"
 
-gcloud compute ssh vm-b --project=$PROJECT_B --zone=$ZONE_B --quiet \
-    --tunnel-through-iap \
-    --command="ping -c 3 $INTERNAL_IP_A"
+# gcloud compute ssh vm-b --project=$PROJECT_B --zone=$ZONE_B --quiet \
+#     --tunnel-through-iap \
+#     --command="ping -c 3 $INTERNAL_IP_A"
+
+echo "Job is Done!"
