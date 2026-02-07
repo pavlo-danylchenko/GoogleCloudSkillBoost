@@ -39,7 +39,7 @@ gcloud compute url-maps create $LB_NAME \
 echo "----------------------------------------------------------------------"
 echo "                    Set up Frontend (Target HTTP Proxy)"
 echo "----------------------------------------------------------------------"
-gcloud compute target-http-proxies create $LB_NAME-proxy \
+gcloud compute target-http-proxies create $LB_NAME-target-proxy \
     --url-map=$LB_NAME
 
 echo "----------------------------------------------------------------------"
@@ -49,7 +49,8 @@ gcloud compute forwarding-rules create $LB_NAME-forwarding-rule \
     --load-balancing-scheme=EXTERNAL_MANAGED \
     --network-tier=PREMIUM \
     --address-region=global \
-    --target-http-proxy=$LB_NAME-proxy \
+    --global \
+    --target-http-proxy=$LB_NAME-target-proxy \
     --ports=80
 
 echo "----------------------------------------------------------------------"
@@ -65,3 +66,74 @@ echo "======================================================================"
 for i in {1..3}; do
     curl -s -o /dev/null -w "%{time_total}\n" http://$LB_IP_ADDRESS/cdn.png;
 done
+
+
+# PUT https://compute.googleapis.com/compute/v1/projects/qwiklabs-gcp-02-a6b5c1958133/global/backendBuckets/cdn-bucket
+# {
+#   "bucketName": "qwiklabs-gcp-02-a6b5c1958133",
+#   "cdnPolicy": {
+#     "cacheMode": "CACHE_ALL_STATIC",
+#     "clientTtl": 60,
+#     "defaultTtl": 60,
+#     "maxTtl": 60,
+#     "negativeCaching": true,
+#     "requestCoalescing": true,
+#     "serveWhileStale": 86400
+#   },
+#   "compressionMode": "DISABLED",
+#   "description": "",
+#   "enableCdn": true,
+#   "name": "cdn-bucket",
+#   "usedBy": [
+#     {
+#       "reference": "https://www.googleapis.com/compute/beta/projects/qwiklabs-gcp-02-a6b5c1958133/global/urlMaps/cdn-lb"
+#     }
+#   ]
+# }
+
+# PATCH https://compute.googleapis.com/compute/v1/projects/qwiklabs-gcp-02-a6b5c1958133/global/targetHttpProxies/cdn-lb-proxy
+# {
+#   "fingerprint": "X3AGOqoBRTY=",
+#   "httpKeepAliveTimeoutSec": 60
+# }
+
+# OPTION # 2
+# POST https://compute.googleapis.com/compute/v1/projects/qwiklabs-gcp-02-a6b5c1958133/global/backendBuckets
+# {
+#   "bucketName": "qwiklabs-gcp-02-a6b5c1958133",
+#   "cdnPolicy": {
+#     "cacheMode": "CACHE_ALL_STATIC",
+#     "clientTtl": 60,
+#     "defaultTtl": 60,
+#     "maxTtl": 60,
+#     "negativeCaching": false,
+#     "serveWhileStale": 0
+#   },
+#   "compressionMode": "DISABLED",
+#   "description": "",
+#   "enableCdn": true,
+#   "name": "cdn-bucket"
+# }
+
+# POST https://compute.googleapis.com/compute/v1/projects/qwiklabs-gcp-02-a6b5c1958133/global/urlMaps
+# {
+#   "defaultService": "projects/qwiklabs-gcp-02-a6b5c1958133/global/backendBuckets/cdn-bucket",
+#   "name": "cdn-lb"
+# }
+
+# POST https://compute.googleapis.com/compute/v1/projects/qwiklabs-gcp-02-a6b5c1958133/global/targetHttpProxies
+# {
+#   "name": "cdn-lb-target-proxy",
+#   "urlMap": "projects/qwiklabs-gcp-02-a6b5c1958133/global/urlMaps/cdn-lb"
+# }
+
+# POST https://compute.googleapis.com/compute/beta/projects/qwiklabs-gcp-02-a6b5c1958133/global/forwardingRules
+# {
+#   "IPProtocol": "TCP",
+#   "ipVersion": "IPV4",
+#   "loadBalancingScheme": "EXTERNAL_MANAGED",
+#   "name": "cdn-lb",
+#   "networkTier": "PREMIUM",
+#   "portRange": "80",
+#   "target": "projects/qwiklabs-gcp-02-a6b5c1958133/global/targetHttpProxies/cdn-lb-target-proxy"
+# }
