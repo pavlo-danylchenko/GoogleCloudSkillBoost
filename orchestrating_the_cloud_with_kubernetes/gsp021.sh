@@ -26,9 +26,11 @@ cd orchestrate-with-kubernetes/kubernetes
 echo "======================================================================"
 echo "                Task 2. A quick Kubernetes demo"
 echo "======================================================================"
-kbectl create deployment nginx --image=nginx:1.27.0
+kubectl create deployment nginx --image=nginx:1.27.0
 kubectl get pods
 kubectl expose deployment nginx --port=80 --type=LoadBalancer
+export EXTERNAL_IP=$(kubectl get services nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+curl http://$EXTERNAL_IP:80
 
 echo "----------------------------------------------------------------------"
 echo "                           Get services"
@@ -66,7 +68,7 @@ kubectl create -f deployments/auth.yaml
 kubectl create -f services/auth.yaml
 kubectl create -f deployments/fortune-service.yaml
 kubectl create -f services/fortune-service.yaml
-kubectl create configmap nginx-frontend-conf --fromfile=nginx/frontend.conf
+kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
 kubectl create -f deployments/frontend.yaml
 kubectl create -f services/frontend.yaml
 
