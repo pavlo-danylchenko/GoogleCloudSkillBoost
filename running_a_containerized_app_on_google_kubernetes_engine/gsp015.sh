@@ -63,12 +63,12 @@ kubectl get pods
 echo "----------------------------------------------------------------------"
 echo "                       Allow external traffic"
 echo "----------------------------------------------------------------------"
-kubectl expose deployment hello-app --name=hello-app--type=LoadBalancer --port 80 --target-port 8080
+kubectl expose deployment hello-app --name=hello-app --type=LoadBalancer --port 80 --target-port 8080
 
 echo "----------------------------------------------------------------------"
 echo "                       Verify the deployment"
 echo "----------------------------------------------------------------------"
-# export EXTERNAL_IP=$(kubectl get services hello-app -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-# curl http://$EXTERNAL_IP
+export EXTERNAL_IP=$(kubectl get services hello-app -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+curl http://$EXTERNAL_IP
 
 echo "JOB is DONE !"
