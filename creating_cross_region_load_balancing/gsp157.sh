@@ -1,9 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-'''
-Set ZONE_2 manually
-'''
+echo "======================================================================"
+echo "                        Set ZONE_2 manually"
+echo "======================================================================"
+
 read -p "Enter the ZONE_2 " ZONE_2
 if [[ -z "$ZONE_2" ]]; then
   echo "ZONE_2 cannot be empty. Please provide a valid zone."]]
