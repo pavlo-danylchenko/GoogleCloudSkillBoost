@@ -17,7 +17,6 @@ echo "======================================================================"
 gcloud sql instances create myinstance \
     --database-version=MYSQL_8_0 \
     --region=$REGION \
-    --zone=$ZONE \
     --tier=db-n1-standard-4 \
     --root-password=password123
 
