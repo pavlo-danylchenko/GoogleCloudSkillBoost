@@ -16,9 +16,9 @@ echo "                   Task 1. Create a Cloud SQL instance"
 echo "======================================================================"
 gcloud sql instances create myinstance \
     --database-version=POSTGRES_15 \
-    --edition=enterprise \
+    --tier=db-custom-2-7680 \
     --region=$REGION \
-    --root-password=password123
+    --root-password=Password123!
 
 
 echo "======================================================================"
