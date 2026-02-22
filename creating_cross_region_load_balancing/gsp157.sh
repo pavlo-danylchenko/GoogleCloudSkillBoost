@@ -40,7 +40,7 @@ gcloud compute instances create www-1 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-1</h1></body></html>' | tee /var/www/html/index.html"
 
 gcloud compute instances create www-2 \
     --image-family debian-11 \
@@ -52,7 +52,7 @@ gcloud compute instances create www-2 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-2</h1></body></html>' | tee /var/www/html/index.html"
 
 gcloud compute instances create www-3 \
     --image-family debian-11 \
@@ -64,7 +64,7 @@ gcloud compute instances create www-3 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-3</h1></body></html>' | tee /var/www/html/index.html"
 
 
 gcloud compute instances create www-4 \
@@ -77,7 +77,7 @@ gcloud compute instances create www-4 \
       apt-get update
       apt-get install apache2 -y
       service apache2 restart
-      Code"
+      echo '<!doctype html><html><body><h1>www-4</h1></body></html>' | tee /var/www/html/index.html"
 
 echo "----------------------------------------------------------------------"
 echo "                  Create firewall rule to allow HTTP traffic"
@@ -162,7 +162,7 @@ gcloud compute url-maps create web-map \
 gcloud compute target-http-proxies create http-lb-proxy \
     --url-map web-map
 
-LB_IP_ADDRESS=$(gcloud compute addresses list --format="get(ADDRESS)")
+LB_IP_ADDRESS=$(gcloud compute addresses list --format="value(ADDRESS)")
 
 gcloud compute forwarding-rules create http-cr-rule \
     --address $LB_IP_ADDRESS \
