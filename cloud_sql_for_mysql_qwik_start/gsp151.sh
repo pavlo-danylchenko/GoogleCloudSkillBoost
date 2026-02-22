@@ -14,7 +14,7 @@ gcloud config set compute/region $REGION
 echo "======================================================================"
 echo "                   Task 1. Create a Cloud SQL instance"
 echo "======================================================================"
-gcloud sql instance create myinstance \
+gcloud sql instances create myinstance \
     --database-version=MYSQL_8_0 \
     --region=$REGION \
     --zone=$ZONE \
