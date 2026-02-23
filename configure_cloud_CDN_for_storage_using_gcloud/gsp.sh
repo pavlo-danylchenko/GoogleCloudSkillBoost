@@ -1,4 +1,5 @@
-BUCKET_NAME=
+export PROJECT_ID=qwiklabs-gcp-00-abf37cc89b56
+BUCKET_NAME=$PROJECT_ID-bucket
 BACKEND_BUCKET=static-backend-bucket
 URL_MAP=cdn-map
 PROXY=cdn-http-proxy
@@ -14,6 +15,6 @@ gcloud compute forwarding-rules create $FORWARDING_RULE --global --target-http-p
 
 export IP_ADDRESS=$(gcloud compute forwarding-rules describe $FORWARDING_RULE --global --format="value(IPAddress)")
 
-gsutil ls gs://BUCKET_NAME/images/
+gsutil ls gs://$BUCKET_NAME/images/
 
 curl -o nature.png http://$IP_ADDRESS/images/nature.png
