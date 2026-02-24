@@ -31,7 +31,7 @@ echo "----------------------------------------------------------------------"
 echo "                   Enable website configuration on the bucket"
 echo "----------------------------------------------------------------------"
 gcloud storage buckets update gs://$DEVSHELL_PROJECT_ID-website \
-    --website-main-suffix=index.html
+    --web-main-page-suffix=index.html
 echo "----------------------------------------------------------------------"
 echo "                   Make the bucket objects publicly readable"
 echo "----------------------------------------------------------------------"
@@ -49,4 +49,5 @@ echo "https://storage.googleapis.com/$DEVSHELL_PROJECT_ID-website/index.html"
 echo "======================================================================"
 echo "                   Task 5. Clean Up"
 echo "======================================================================"
+# gcloud storage buckets delete gs://$DEVSHELL_PROJECT_ID-website --quiet
 # gcloud storage rm -r gs://$DEVSHELL_PROJECT_ID-website --quiet
