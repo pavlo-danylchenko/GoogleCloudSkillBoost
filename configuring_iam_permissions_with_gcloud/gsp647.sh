@@ -1,21 +1,5 @@
 #!/bin/bash
-set -euo pipefail
-
-echo "======================================================================"
-echo "            Task 0. Detecting project IDs, regions and zones"
-echo "                     Setting up the environment"
-echo "======================================================================"
-PROJECT_A=$GOOGLE_CLOUD_PROJECT
-PROJECT_B=$(gcloud projects list --format="value(projectId)" --filter="projectId != $PROJECT_A" --limit=1)
-echo "Project A ID: $PROJECT_A"
-echo "Project B ID: $PROJECT_B"
-PROJECTS=("$PROJECT_A" "$PROJECT_B")
-
-REGION_A=$(gcloud compute project-info describe --project=$PROJECT_A \
-        --format="value(commonInstanceMetadata.items[google-compute-default-region])")
-ZONE_A=$(gcloud compute project-info describe --project=$PROJECT_A \
-        --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-
+# set -euo pipefail
 echo "======================================================================"
 echo "               Task 1. Configure the gcloud environment"
 echo "======================================================================"
@@ -33,7 +17,7 @@ gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
 gcloud compute instances create lab-1 --zone=$ZONE \
-        --macine-type=e2-standard-2
+        --machine-type=e2-standard-2
 
 export NEW_ZONE=$(gcloud compute zones list \
     --filter="region:($REGION) AND name:!($ZONE)" \
