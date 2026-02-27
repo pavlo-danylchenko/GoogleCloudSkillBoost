@@ -4,9 +4,7 @@ set -euo pipefail
 echo "======================================================================"
 echo "                 Task 1. Load data into tables"
 echo "======================================================================"
-gcloud spanner databases execute-sql banking-ops-db	 \
-    --instance=banking-ops-instance	 \
-    --sql='
+SQL_QUERIES="
         insert into Portfolio (PortfolioId, Name, ShortName, PortfolioInfo) values (1, "Banking", "Bnkg", "All Banking Business");
         insert into Portfolio (PortfolioId, Name, ShortName, PortfolioInfo) values (2, "Asset Growth", "AsstGrwth", "All Asset Focused Products");
         insert into Portfolio (PortfolioId, Name, ShortName, PortfolioInfo) values (3, "Insurance", "Ins", "All Insurance Focused Products");
@@ -23,7 +21,18 @@ gcloud spanner databases execute-sql banking-ops-db	 \
         insert into Product (ProductId,CategoryId,PortfolioId,ProductName,ProductAssetCode,ProductClass) values (7,1,1,"Auto Loan","AutLn","Banking LOB");
         insert into Product (ProductId,CategoryId,PortfolioId,ProductName,ProductAssetCode,ProductClass) values (8,4,3,"Permanent Life Insurance","PermLife","Insurance LOB");
         insert into Product (ProductId,CategoryId,PortfolioId,ProductName,ProductAssetCode,ProductClass) values (9,2,2,"US Savings Bonds","USSavBond","Investment LOB");
-        '
+"
+
+IFS=';' read -ra ADDR <<< "$SQL_QUERIES"
+for query in "${ADDR[@]}"; do
+    trimmed_query=$(echo "$query" | xargs)
+    
+    if [ -n "$trimmed_query" ]; then
+        gcloud spanner databases execute-sql banking-ops-db \
+            --instance=banking-ops-instance \
+            --sql="$trimmed_query"
+    fi
+done
 
 echo "======================================================================"
 echo "    Task 2. Use pre-built Python client library code to load data"
