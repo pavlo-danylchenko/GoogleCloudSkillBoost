@@ -2,26 +2,6 @@
 set -euo pipefail
 
 echo "======================================================================"
-echo "            Task 0. Detecting project IDs, regions and zones"
-echo "                     Setting up the environment"
-echo "======================================================================"
-
-read -p "ENTER IP_ADDRESS_1: " IP_ADDRESS_1
-read -p "ENTER IP_ADDRESS_2: " IP_ADDRESS_2
-
-export ZONE=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo $ZONE
-
-export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
-echo $REGION
-
-export PROJECT_ID=$(gcloud config get-value project)
-
-gcloud config set compute/zone $ZONE
-gcloud config set compute/region $REGION
-
-echo "======================================================================"
 echo "                 Task 1. Load data into tables"
 echo "======================================================================"
 gcloud spanner databases execute-sql banking-ops-db	 \
