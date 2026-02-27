@@ -1,0 +1,8 @@
+
+export VM_NAME=$(gcloud compute instances list --format='value(name)' --limit=1)
+
+export ZONE=$(gcloud compute instances list --format='value(zone)' --limit=1)
+export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
+gcloud compute addresses create lab-static-ip --region=$REGION
+export IP_ADDRESS=$(gcloud compute addresses describe lab-static-ip --region=$REGION --format='get(address)') && gcloud compute instances add-access-config $VM_NAME --zone=$ZONE --address=$IP_ADDRESS
