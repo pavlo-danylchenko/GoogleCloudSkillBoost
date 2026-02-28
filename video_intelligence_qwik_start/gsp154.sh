@@ -14,7 +14,8 @@ echo "                   Task 1. Set up authorization"
 echo "======================================================================"
 gcloud iam service-accounts create quickstart
 gcloud iam service-accounts keys create key.json --iam-account quickstart@$PROJECT_ID.iam.gserviceaccount.com
-gcloud auth activate-service-account --key-file key.json
+sleep 5
+gcloud auth activate-service-account --key-file=key.json
 
 export AUTH_TOKEN=$(gcloud auth print-access-token)
 
@@ -38,12 +39,12 @@ export OPERATION_NAME=$(curl -s -H 'Content-Type: application/json' \
 
 curl -s -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' \
-    'https://videointelligence.googleapis.com/v1/$OPERATION_NAME'
+    "https://videointelligence.googleapis.com/v1/$OPERATION_NAME"
 
 sleep 60
 
 curl -s -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer '$(gcloud auth print-access-token)'' \
-    'https://videointelligence.googleapis.com/v1/$OPERATION_NAME'
+    "https://videointelligence.googleapis.com/v1/$OPERATION_NAME"
 
 echo "JOB is DONE !"
