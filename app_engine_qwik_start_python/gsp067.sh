@@ -48,7 +48,8 @@ sed -i "s/Hello World/Hello, Cruel World/g" main.py
 echo "======================================================================"
 echo "                    Task 5. Deploy your app"
 echo "======================================================================"
-gcloud app deploy --project=$PROJECT_ID --region=$REGION
+gcloud app create --project=$PROJECT_ID --region=$REGION
+gcloud app deploy app.yaml --project $PROJECT_ID --quiet
 
 
 echo "======================================================================"
