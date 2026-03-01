@@ -79,7 +79,7 @@ FROM
 echo "======================================================================"
 echo "Task 7. Create a machine learning model to predict the winner based on seed and team name"
 echo "======================================================================"
-bq mk --dataset $DEVSHELL_PROJECT_ID:bracketology --location=US
+bq mk --dataset $DEVSHELL_PROJECT_ID:bracketology
 
 bq query --use_legacy_sql=false \
 "
