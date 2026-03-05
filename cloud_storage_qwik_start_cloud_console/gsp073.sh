@@ -42,7 +42,8 @@ gsutil iam ch allUsers:objectViewer gs://$PROJECT_ID
 echo "======================================================================"
 echo "                     Task 4. Create folders"
 echo "======================================================================"
-gcloud storage folders create --recursive gs://$PROJECT_ID/folder1/folder2/folder3
+gsutil cp /dev/null gs://$PROJECT_ID/folder1/
+gsutil cp /dev/null gs://$PROJECT_ID/folder1/folder2/folder3/
 
 
 echo "======================================================================"
