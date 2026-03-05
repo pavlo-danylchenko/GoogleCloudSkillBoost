@@ -15,6 +15,7 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
+gcloud services enable appengine.googleapis.com
 
 
 echo "======================================================================"
@@ -26,6 +27,7 @@ cd helloworld/http-server
 echo "======================================================================"
 echo "                 Task 2. Deploy and view your app"
 echo "======================================================================"
+gcloud app create --project=$PROJECT_ID --region=$REGION
 gcloud app deploy --project $PROJECT_ID --quiet
 gcloud app browse
 
