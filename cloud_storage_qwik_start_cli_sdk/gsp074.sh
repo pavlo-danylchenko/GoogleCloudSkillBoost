@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipedfail
+set -euo pipefail
 
 
 echo "======================================================================"
