@@ -16,7 +16,6 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
-gcloud services enable appengine.googleapis.com
 
 echo "======================================================================"
 echo "              Task 1. Enable Google App Engine Admin API"
