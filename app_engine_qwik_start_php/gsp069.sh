@@ -49,9 +49,9 @@ gcloud app browse
 echo "======================================================================"
 echo "                     Task 5. Make a change"
 echo "======================================================================"
-sed -i "s/Hello World/Goodbye World/g" index.php
+sed -i "s/hello world/goodbye world/g" index.php
 gcloud app deploy --project $PROJECT_ID --quiet
-gcloud app 
+gcloud app browse
 
 
 echo "======================================================================"
