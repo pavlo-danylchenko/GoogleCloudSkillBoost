@@ -17,7 +17,7 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 echo "======================================================================"
 echo "       Task 2. Prepare a Cloud Storage bucket for access testing"
 echo "======================================================================"
-gsutil mb gs://$PROJECT_ID --project=$PROJECT_ID --location=US
+gsutil mb gs://$PROJECT_ID
 curl -LO https://raw.githubusercontent.com/pavlo-danylchenko/GoogleCloudSkillBoost/refs/heads/main/cloud_iam_qwik_start/sample.txt
 gsutil cp sample.txt gs://$PROJECT_ID/
 
