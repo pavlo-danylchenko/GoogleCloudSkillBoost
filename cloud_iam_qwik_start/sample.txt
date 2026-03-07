@@ -1,0 +1,8 @@
+Cloud IAM: Qwik Start
+
+GSP064
+
+Task 1. Explore the IAM console and project level roles
+Task 2. Prepare a Cloud Storage bucket for access testing
+Task 3. Remove project access
+Task 4. Add Cloud Storage permissions
