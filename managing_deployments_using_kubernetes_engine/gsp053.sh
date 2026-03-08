@@ -45,10 +45,10 @@ kubectl create -f deployments/fortune-app-blue.yaml
 # kubectl get deployments
 # kubectl get replicasets
 # kubectl get pods
-bubectl create -f services/fortune-app.yaml
+kubectl create -f services/fortune-app.yaml
 # kubectl get services fortune-app
 
-curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || :
+curl "http://$(kubectl get svc fortune-app -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')/version" || :
 
 # kubectl scale deployment fortune-app-blue --replicas=5
 # kubectl get pods | grep fortune-app-blue | wc -l
@@ -64,7 +64,7 @@ echo "----------------------------------------------------------------------"
 echo "                      Trigger a rolling update"
 echo "----------------------------------------------------------------------"
 kubectl set image deployment/fortune-app-blue \
-  fortune-service=us-central1-docker.pkg.dev/qwiklabs-resources/spl-lab-apps/fortune-service:2.0.0
+    fortune-app=$REGION-docker.pkg.dev/qwiklabs-resources/spl-lab-apps/fortune-service:2.0.0
 
 kubectl set env deployment/fortune-app-blue APP_VERSION=2.0.0
 
@@ -98,8 +98,8 @@ echo "                      Task 4. Canary deployments"
 echo "======================================================================"
 kubectl create -f deployments/fortune-app-canary.yaml
 
-# for i in {1..10}; do curl -s http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true; echo;
-# done
+for i in {1..10}; do curl -s http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true; echo;
+done
 
 read -p "Check the Task status and press Enter to proceed to the next task #5 ..."
 
@@ -109,13 +109,13 @@ echo "                      Task 5. Blue-green deployments"
 echo "======================================================================"
 kubectl apply -f services/fortune-app-blue-service.yaml
 kubectl create -f deployments/fortune-app-green.yaml
-# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true
+# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
 
 kubectl apply -f services/fortune-app-green-service.yaml
-# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true
+# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
 
 kubectl apply -f services/fortune-app-blue-service.yaml
-# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true
+# curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version
 
 echo "======================================================================"
 echo "                          JOB is DONE !"
