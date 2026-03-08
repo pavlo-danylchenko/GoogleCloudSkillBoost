@@ -48,10 +48,10 @@ gcloud compute networks subnets create on-prem-central --network on-prem \
 echo "======================================================================"
 echo "                     Task 3. Create VPN gateways"
 echo "======================================================================"
-gcloud compute networks target-vpn-gateways create cloud-gw1 --network cloud \
+gcloud compute target-vpn-gateways create cloud-gw1 --network cloud \
     --region $REGION_2
 
-gcloud compute networks target-vpn-gateways create on-prem-gw1 --network on-prem \
+gcloud compute target-vpn-gateways create on-prem-gw1 --network on-prem \
     --region $REGION
 
 
@@ -90,7 +90,7 @@ gcloud compute vpn-tunnels create on-prem-tunnel1 --peer-address $cloud_gw1_ip \
     --remote-traffic-selector 0.0.0.0/0 --shared-secret=sharedsecret --region $REGION
 
 gcloud compute vpn-tunnels create cloud-tunnel1 --peer-address $on_prem_gw_ip \
-    --target-vpn-gateway cloud-gw1 -ike-version 2 --local-traffic-selector 0.0.0.0/0 \
+    --target-vpn-gateway cloud-gw1 --ike-version 2 --local-traffic-selector 0.0.0.0/0 \
     --remote-traffic-selector 0.0.0.0/0 --shared-secret=sharedsecret --region $REGION_2
 
 gcloud compute routes create on-prem-route1 --destination-range 10.0.1.0/24 \
@@ -123,12 +123,12 @@ gcloud compute instances create on-prem-loadtest \
     --boot-disk-type pd-standard \
     --boot-disk-device-name on-prem-loadtest
 
-gcloud compute ssh cloud-loadtest --zone=$ZONE_2 --quiet \
-    --command="sudo apt-get install -y iperf && iperf -s -i 5 && iperf -c 192.168.1.2 -P 20 -x C && exit"
+# gcloud compute ssh cloud-loadtest --zone=$ZONE_2 --quiet \
+#     --command="sudo apt-get install -y iperf && iperf -s -i 5 && iperf -c 192.168.1.2 -P 20 -x C && exit"
 
 
-gcloud compute ssh on-prem-loadtest --zone=$ZONE --quiet \
-    --command="sudo apt-get install -y iperf && iperf -s -i 5 && iperf -c 192.168.1.2 -P 20 -x C && exit"
+# gcloud compute ssh on-prem-loadtest --zone=$ZONE --quiet \
+#     --command="sudo apt-get install -y iperf && iperf -s -i 5 && iperf -c 192.168.1.2 -P 20 -x C && exit"
 
 echo "======================================================================"
 echo "                          JOB is DONE !"
