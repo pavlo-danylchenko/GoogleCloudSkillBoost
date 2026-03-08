@@ -81,14 +81,14 @@ echo "                           Task 3. Run"
 echo "======================================================================"
 docker run -p 4000:80 --name my-app -d node-app:0.1
 
-curl http://localhost:4000
+curl http://localhost:4000 || true
 
 sed -i "s/Hello World/Welcome to Cloud/g" app.js
 docker build -t node-app:0.2 .
 docker run -p 8080:80 --name my-app-2 -d node-app:0.2
 docker ps
 
-curl http://localhost:8080
+curl http://localhost:8080 || true
 
 
 # echo "======================================================================"
@@ -102,7 +102,7 @@ curl http://localhost:8080
 echo "======================================================================"
 echo "                           Task 5. Publish"
 echo "======================================================================"
-gcloud artifacts repositories cretae my-repository --repository-format=docker \
+gcloud artifacts repositories create my-repository --repository-format=docker \
 	--location=$REGION --description="Docker repository"
 gcloud auth configure-docker $REGION-docker.pkg.dev
 
@@ -124,7 +124,7 @@ docker images
 
 
 docker run -p 4000:80 -d $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/node-app:0.2
-curl http://localhost:4000
+curl http://localhost:4000 || true
 
 echo "======================================================================"
 echo "                          JOB is DONE !"
