@@ -32,7 +32,7 @@ export API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --forma
 
 # Get instance zone
 export ZONE=$(gcloud compute instances list --project=$DEVSHELL_PROJECT_ID \
-    --forma="value(ZONE)")
+    --format="value(ZONE)")
 
 gcloud compute instances add-metadata linux-instance \
     --zone=$ZONE \
