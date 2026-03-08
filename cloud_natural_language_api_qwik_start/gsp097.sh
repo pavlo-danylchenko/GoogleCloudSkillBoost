@@ -20,9 +20,12 @@ export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value core/project)
 gcloud iam service-accounts create my-natlang-sa \
     --display-name "my natural language service account"
 
+sleep 5
+
 gcloud iam service-accounts keys create ~/key.json \
     --iam-account my-natlang-sa@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
 
+sleep 5
 
 export GOOGLE_APPLICATION_CREDEBTIALS="/home/USER/key.json"
 
@@ -40,8 +43,7 @@ echo "======================================================================"
 
 gcloud compute ssh linux-instance \
     --quiet \
-    --project=$PROJECT_ID \
-    --tunnel-through-iap \
+    --project=$GOOGLE_CLOUD_PROJECT \
     --zone=$ZONE \
     --command="gcloud ml language analyze-entities --content=\"Michelangelo Caravaggio, Italian painter, is known for 'The Calling of Saint Matthew'.\" > result.json"
 
