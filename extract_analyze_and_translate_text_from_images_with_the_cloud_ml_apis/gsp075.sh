@@ -124,7 +124,7 @@ curl -s -X POST -H "Content-Type: application/json" \
 echo "======================================================================"
 echo "   Task 6. Analyzing the image's text with the Natural Language API"
 echo "======================================================================"
-cat > nl-request.jso << EOF
+cat > nl-request.json << EOF
 {
   "document":{
     "type":"PLAIN_TEXT",
