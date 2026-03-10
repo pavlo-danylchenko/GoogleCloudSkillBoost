@@ -17,9 +17,9 @@ export PROJECT_ID=$(gcloud config get-value project)
 echo "======================================================================"
 echo "              Task 00. Enable the Cloud Natural Language API"
 echo "======================================================================"
-gcloud services enable vision.googleapis.com
-gcloud services enable translation.googleapis.com
-gcloud services enable language.googleapis.com
+# gcloud services enable vision.googleapis.com
+# gcloud services enable translation.googleapis.com
+# gcloud services enable language.googleapis.com
 
 echo "======================================================================"
 echo "                    Task 1. Create an API key"
