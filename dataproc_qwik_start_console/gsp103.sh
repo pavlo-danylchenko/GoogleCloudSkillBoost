@@ -28,7 +28,6 @@ gcloud dataproc clusters create example-cluster \
     --worker-boot-disk-type=pd-standard \
     --worker-machine-type=e2-standard-2 \
     --worker-boot-disk-size=30GB \
-    --no-address=false \
     --public-ip-address \
     --project=$GOOGLE_CLOUD_PROJECT
 
