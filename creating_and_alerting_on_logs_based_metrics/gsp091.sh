@@ -103,6 +103,7 @@ gcloud logging metrics create hello-app-error \
     --log-filter='severity=ERROR
 resource.labels.container_name="hello-app"
 textPayload: "ERROR: 404 Error page not found"'
+sleep 20
 
 
 echo "======================================================================"
