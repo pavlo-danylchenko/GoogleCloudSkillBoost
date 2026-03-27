@@ -135,7 +135,7 @@ echo "----------------------------------------------------------------------"
 echo "                      Ganache Ethereum Node"
 echo "----------------------------------------------------------------------"
 gcloud compute instances create-with-container mpc-lab-ethereum-node  \
-  --zone=ZONE \
+  --zone=$ZONE \
   --tags=http-server \
   --shielded-secure-boot \
   --shielded-vtpm \
@@ -369,6 +369,7 @@ LABEL "tee.launch_policy.allow_env_override"="NODE_URL,RESULTS_BUCKET,KEY_BUCKET
 CMD [ "node", "index.js" ]
 EOF
 
+cd ..
 
 echo "----------------------------------------------------------------------"
 echo "                        Create the repository"
