@@ -76,19 +76,20 @@ echo "                  The FIRST PART is DONE !!!"
 echo "======================================================================"
 
 
-# echo "======================================================================"
-# echo "           Task 5. Deploying the App to App Engine Flexible"
-# echo "======================================================================"
-# sed -i "s/<your-cloud-storage-bucket>/$PROJECT_ID/g" main.py
+echo "======================================================================"
+echo "           Task 5. Deploying the App to App Engine Flexible"
+echo "======================================================================"
+sed -i "s/<your-cloud-storage-bucket>/$PROJECT_ID/g" app.yaml
 
-# cat >> app.yaml << EOF
-# manual_scaling:
-#   instances: 1
-# EOF
+cat >> app.yaml << EOF
 
-# gcloud config set app/cloud_build_timeout 1000
-# gcloud app deploy app.yaml --project $PROJECT_ID --quiet
+manual_scaling:
+  instances: 1
+EOF
 
-# echo "======================================================================"
-# echo "                      JOB is DONE !!!"
-# echo "======================================================================"
+gcloud config set app/cloud_build_timeout 1000
+gcloud app deploy app.yaml --project $PROJECT_ID --quiet
+
+echo "======================================================================"
+echo "                      JOB is DONE !!!"
+echo "======================================================================"
