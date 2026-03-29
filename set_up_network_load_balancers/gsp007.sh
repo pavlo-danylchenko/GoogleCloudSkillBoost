@@ -64,21 +64,20 @@ gcloud compute instances create www3 \
 gcloud compute firewall-rules create www-firewall-network-lb \
     --target-tags=network-lb-tag --allow tcp:80
 
-sleep 5
+# sleep 10
 
-gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs[0].natIP)"
-IP_ADDRESSES=($(gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs[0].natIP)"))
+# IP_ADDRESSES=($(gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs[0].natIP)"))
 
-for IP in "${IP_ADDRESSES[@]}"
-do
-    if [ -n "$IP" ]; then
-        echo "Checking the instance ..."
-        curl -s "http://$IP"
-        echo "--------------------------"
-    else
-        echo "There is no EXTRENAL IP Address!!!"
-    fi
-done
+# for IP in "${IP_ADDRESSES[@]}"
+# do
+#     if [ -n "$IP" ]; then
+#         echo "Checking the instance ..."
+#         curl -s "http://$IP"
+#         echo "--------------------------"
+#     else
+#         echo "There is no EXTRENAL IP Address!!!"
+#     fi
+# done
 
 
 echo "======================================================================"
@@ -107,13 +106,13 @@ gcloud compute forwarding-rules create www-rule \
 
 
 echo "======================================================================"
-echo "                 Task 5. Send traffic to your instances"
+echo "                 Task 5. Send traffic to your instances (OPTIONAL)"
 echo "======================================================================"
-IP_ADDRESS=$(gcloud compute forwarding-rules describe www-rule --region $REGION --format="json" | jq -r .IPAddress)
-echo $IPADDRESS
+# IP_ADDRESS=$(gcloud compute forwarding-rules describe www-rule --region $REGION --format="json" | jq -r .IPAddress)
+# echo $IP_ADDRESS
 
 
-while true; do curl -m1 $IPADDRESS; done
+# while true; do curl -m1 $IP_ADDRESS; done
 
 echo "======================================================================"
 echo "                           JOB is DONE !"
