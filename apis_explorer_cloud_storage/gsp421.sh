@@ -5,16 +5,14 @@ echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
-export PROJECT_ID=$(gcloud config get-value project)
+# export ZONE=$(gcloud compute project-info describe \
+#     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+# echo $ZONE
 
-export ZONE=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo $ZONE
+# export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
-export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
-
-gcloud config set compute/zone $ZONE
-gcloud config set compute/region $REGION
+# gcloud config set compute/zone $ZONE
+# gcloud config set compute/region $REGION
 
 
 # gcloud services api-keys create --display-name="APIkey"
@@ -29,30 +27,21 @@ echo "                Task 1. Create Cloud Storage Buckets"
 echo "======================================================================"
 curl --request POST \
   "https://storage.googleapis.com/storage/v1/b?project=$DEVSHELL_PROJECT_ID" \
-  --header 'Authorization: Bearer $AUTH_TOKEN' \
+  --header "Authorization: Bearer $AUTH_TOKEN" \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
-  --data '{"name":"$DEVSHELL_PROJECT_ID"}' \
+  --data "{'name':'$DEVSHELL_PROJECT_ID'}" \
   --compressed
-
-# curl --request POST \
-#   'https://storage.googleapis.com/storage/v1/b?project=%24DEVSHELL_PROJECT_ID&key=[YOUR_API_KEY]' \
-#   --header 'Authorization: Bearer [YOUR_ACCESS_TOKEN]' \
-#   --header 'Accept: application/json' \
-#   --header 'Content-Type: application/json' \
-#   --data '{"name":"$DEVSHELL_PROJECT_ID"}' \
-#   --compressed
-
 
 echo "======================================================================"
 echo "                Task 2. Make a second Cloud Storage bucket"
 echo "======================================================================"
 curl --request POST \
   "https://storage.googleapis.com/storage/v1/b?project=$DEVSHELL_PROJECT_ID" \
-  --header 'Authorization: Bearer $AUTH_TOKEN' \
+  --header "Authorization: Bearer $AUTH_TOKEN" \
   --header 'Accept: application/json' \
   --header 'Content-Type: application/json' \
-  --data '{"name":"$DEVSHELL_PROJECT_ID-2"}' \
+  --data "{'name':'$DEVSHELL_PROJECT_ID-2'}" \
   --compressed
 
 
@@ -75,7 +64,6 @@ curl -X POST --data-binary @demo-image2.png \
     "https://storage.googleapis.com/upload/storage/v1/b/$DEVSHELL_PROJECT_ID/o?uploadType=media&name=demo-image2.png"
 
 
-
 echo "======================================================================"
 echo "            Task 4. Copy files between Cloud Storage buckets"
 echo "======================================================================"
@@ -92,13 +80,13 @@ echo "            Task 5. Delete files from a Cloud Storage bucket"
 echo "======================================================================"
 curl --request DELETE \
   "https://storage.googleapis.com/storage/v1/b/$DEVSHELL_PROJECT_ID/o/demo-image1.png" \
-  --header 'Authorization: Bearer $AUTH_TOKEN' \
+  --header "Authorization: Bearer $AUTH_TOKEN" \
   --header 'Accept: application/json' \
   --compressed
 
 curl --request DELETE \
   "https://storage.googleapis.com/storage/v1/b/$DEVSHELL_PROJECT_ID/o/demo-image2.png" \
-  --header 'Authorization: Bearer $AUTH_TOKEN' \
+  --header "Authorization: Bearer $AUTH_TOKEN" \
   --header 'Accept: application/json' \
   --compressed
 
@@ -108,7 +96,7 @@ echo "              Task 6. Delete your Cloud Storage bucket"
 echo "======================================================================"
 curl --request DELETE \
   "https://storage.googleapis.com/storage/v1/b/$DEVSHELL_PROJECT_ID" \
-  --header 'Authorization: Bearer $AUTH_TOKEN' \
+  --header "Authorization: Bearer $AUTH_TOKEN" \
   --header 'Accept: application/json' \
   --compressed
 
