@@ -61,11 +61,11 @@ read -p "Check the progress to verify the objective and Press [Enter] key to con
 echo "======================================================================"
 echo "                   Task 4. Delete assets, zones, and lakes"
 echo "======================================================================"
-gcloud dataplex assets delete orders-curated-dataset --location=$REGION --zone=orders-curated-zone --lake=ecommerce
+gcloud dataplex assets delete orders-curated-dataset --location=$REGION --zone=orders-curated-zone --lake=ecommerce --quiet
 
-gcloud dataplex zones delete orders-curated-zone --location=$REGION --lake=ecommerce
+gcloud dataplex zones delete orders-curated-zone --location=$REGION --lake=ecommerce --quiet
 
-gcloud dataplex lakes delete ecommerce --location=$REGION
+gcloud dataplex lakes delete ecommerce --location=$REGION --quiet 
 
 echo "======================================================================"
 echo "                         JOB is DONE !!!"
