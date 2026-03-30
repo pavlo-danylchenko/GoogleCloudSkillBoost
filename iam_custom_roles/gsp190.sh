@@ -1,79 +1,101 @@
 #!/bin/bash
-BLACK=`tput setaf 0`
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-BLUE=`tput setaf 4`
-MAGENTA=`tput setaf 5`
-CYAN=`tput setaf 6`
-WHITE=`tput setaf 7`
+set -euo pipefail
 
-BG_BLACK=`tput setab 0`
-BG_RED=`tput setab 1`
-BG_GREEN=`tput setab 2`
-BG_YELLOW=`tput setab 3`
-BG_BLUE=`tput setab 4`
-BG_MAGENTA=`tput setab 5`
-BG_CYAN=`tput setab 6`
-BG_WHITE=`tput setab 7`
+echo "======================================================================"
+echo "            Task 0. Detecting project IDs, regions and zones"
+echo "                     Setting up the environment"
+echo "======================================================================"
+export PROJECT_ID=$(gcloud config get-value project)
 
-BOLD=`tput bold`
-RESET=`tput sgr0`
-#----------------------------------------------------start--------------------------------------------------#
+export ZONE=$(gcloud compute project-info describe \
+    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+echo $ZONE
 
-# Task 4. Create a custom role
-# Create a custom role using a YAML file
-echo "${YELLOW}${BOLD}Starting${RESET}" "${GREEN}${BOLD}Execution${RESET}"
+export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
-echo 'title: "Role Editor"
+gcloud config set compute/zone $ZONE
+gcloud config set compute/region $REGION
+
+
+echo "======================================================================"
+echo "               Task 4. Create a custom role"
+echo "======================================================================"
+
+cat > nano role-definition.yaml << EOF
+title: "Role Editor"
 description: "Edit access for App Versions"
 stage: "ALPHA"
 includedPermissions:
 - appengine.versions.create
-- appengine.versions.delete' > role-definition.yaml
+- appengine.versions.delete
+EOF
 
 gcloud iam roles create editor --project $DEVSHELL_PROJECT_ID \
---file role-definition.yaml
+    --file role-definition.yaml
 
-# Create a custom role using flags
+
+echo "----------------------------------------------------------------------"
+echo "                 Create a custom role using flags"
+echo "----------------------------------------------------------------------"
 gcloud iam roles create viewer --project $DEVSHELL_PROJECT_ID \
---title "Role Viewer" --description "Custom role description." \
---permissions compute.instances.get,compute.instances.list --stage ALPHA
+    --title "Role Viewer" --description "Custom role description." \
+    --permissions compute.instances.get,compute.instances.list --stage ALPHA
 
-# Task 5. List the custom roles
+
+echo "======================================================================"
+echo "                  Task 5. List the custom roles"
+echo "======================================================================"
 gcloud iam roles list --project $DEVSHELL_PROJECT_ID
 gcloud iam roles list
 
+echo "======================================================================"
+echo "                Task 6. Update an existing custom role"
+echo "======================================================================"
 
-# Task 6. Update an existing custom role
-# Update a custom role using a YAML file
-echo 'description: Edit access for App Versions
+echo "----------------------------------------------------------------------"
+echo "               Update a custom role using a YAML file"
+echo "----------------------------------------------------------------------"
+cat > new-role-definition.yaml << EOF
+description: Edit access for App Versions
 etag:
 includedPermissions:
 - appengine.versions.create
 - appengine.versions.delete
 - storage.buckets.get
 - storage.buckets.list
-name: projects/'$DEVSHELL_PROJECT_ID'/roles/editor
+name: projects/$DEVSHELL_PROJECT_ID/roles/editor
 stage: ALPHA
-title: Role Editor' > new-role-definition.yaml
+title: Role Editor
+EOF
 
 gcloud iam roles update editor --project $DEVSHELL_PROJECT_ID \
---file new-role-definition.yaml --quiet
+    --file new-role-definition.yaml --quiet
 
-# Update a custom role using flags
+echo "----------------------------------------------------------------------"
+echo "                  Update a custom role using flags"
+echo "----------------------------------------------------------------------"
 gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID \
---add-permissions storage.buckets.get,storage.buckets.list
+    --add-permissions storage.buckets.get,storage.buckets.list
 
-# Task 7. Disable a custom role
+
+echo "======================================================================"
+echo "                   Task 7. Disable a custom role"
+echo "======================================================================"
 gcloud iam roles update viewer --project $DEVSHELL_PROJECT_ID \
 --stage DISABLED
 
-# Task 8. Delete a custom role
+echo "======================================================================"
+echo "                   Task 8. Delete a custom role"
+echo "======================================================================"
 gcloud iam roles delete viewer --project $DEVSHELL_PROJECT_ID
 
-# Task 9. Restore a custom role
+
+echo "======================================================================"
+echo "                   Task 9. Restore a custom role"
+echo "======================================================================"
 gcloud iam roles undelete viewer --project $DEVSHELL_PROJECT_ID
 
-echo "${RED}${BOLD}Congratulations${RESET}" "${WHITE}${BOLD}for${RESET}" "${GREEN}${BOLD}Completing the Lab !!!${RESET}"
+echo "======================================================================"
+echo "                         JOB is DONE !!!"
+echo "======================================================================"
 
