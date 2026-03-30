@@ -21,7 +21,7 @@ echo "======================================================================"
 echo "               Task 4. Create a custom role"
 echo "======================================================================"
 
-cat > nano role-definition.yaml << EOF
+cat > role-definition.yaml << EOF
 title: "Role Editor"
 description: "Edit access for App Versions"
 stage: "ALPHA"
@@ -45,8 +45,8 @@ gcloud iam roles create viewer --project $DEVSHELL_PROJECT_ID \
 echo "======================================================================"
 echo "                  Task 5. List the custom roles"
 echo "======================================================================"
-gcloud iam roles list --project $DEVSHELL_PROJECT_ID
-gcloud iam roles list
+# gcloud iam roles list --project $DEVSHELL_PROJECT_ID
+# gcloud iam roles list
 
 echo "======================================================================"
 echo "                Task 6. Update an existing custom role"
