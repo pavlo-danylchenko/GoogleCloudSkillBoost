@@ -69,7 +69,7 @@ echo "======================================================================"
 echo "            Task 3. Create an Application Load Balancer"
 echo "======================================================================"
 gcloud compute instance-templates create lb-backend-template \
-   --region=Region \
+   --region=$REGION \
    --network=default \
    --subnet=default \
    --tags=allow-health-check \
@@ -89,7 +89,7 @@ gcloud compute instance-templates create lb-backend-template \
 
 
 gcloud compute instance-groups managed create lb-backend-group \
-   --template=lb-backend-template --size=2 --zone=Zone
+   --template=lb-backend-template --size=2 --zone=$ZONE
 
 
 gcloud compute firewall-rules create fw-allow-health-check \
@@ -121,7 +121,7 @@ gcloud compute backend-services create web-backend-service \
 
 gcloud compute backend-services add-backend web-backend-service \
   --instance-group=lb-backend-group \
-  --instance-group-zone=Zone \
+  --instance-group-zone=$ZONE \
   --global
 
 gcloud compute url-maps create web-map-http \
@@ -136,6 +136,20 @@ gcloud compute forwarding-rules create http-content-rule \
    --global \
    --target-http-proxy=http-lb-proxy \
    --ports=80
+
+
+echo "======================================================================"
+echo "             Task 4. Test traffic sent to your instances"
+echo "======================================================================"
+
+IP_ADDRESS=$(gcloud compute forwarding-rules describe http-content-rule --global --format="json" | jq -r .IPAddress)
+echo $IP_ADDRESS
+
+
+for i in {1..10}
+do
+    curl -m1 $IP_ADDRESS
+done
 
 echo "======================================================================"
 echo "                           JOB is DONE !"
