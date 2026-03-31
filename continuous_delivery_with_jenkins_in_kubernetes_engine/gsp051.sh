@@ -28,7 +28,7 @@ echo "                     Create a Kubernetes cluster"
 echo "----------------------------------------------------------------------"
 gcloud container clusters create jenkins-cd \
     --num-nodes=2 \
-    --machine-type=e2-standrd-2 \
+    --machine-type=e2-standard-2 \
     --scopes="https://www.googleapis.com/auth/source.read_write,cloud-platform"
 
 echo "----------------------------------------------------------------------"
