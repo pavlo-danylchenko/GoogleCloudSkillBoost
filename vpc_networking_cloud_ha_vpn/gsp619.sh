@@ -5,20 +5,22 @@ echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
-export ZONE=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo "$ZONE - for vpc-demo-instance2"
+# export ZONE=$(gcloud compute project-info describe \
+#     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+# echo "$ZONE - for vpc-demo-instance2"
 
-export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+# export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
 # gcloud config set compute/zone $ZONE
 # gcloud config set compute/region $REGION
 
+read -p "Input ZONE #0 name: " ZONE
 read -p "Input ZONE #1 name: " ZONE_1
-export REGION_1=$(echo $ZONE_1 | cut -d '-' -f 1-2)
-
 read -p "Input ZONE #2 name: " ZONE_2
-export REGION_2=$(echo $ZONE_2 | cut -d '-' -f 1-2)
+
+export REGION_1=$(echo $ZONE | cut -d '-' -f 1-2)
+export REGION_2=$(echo $ZONE_1 | cut -d '-' -f 1-2)
+export REGION_3=$(echo $ZONE_2 | cut -d '-' -f 1-2)
 
 echo "======================================================================"
 echo "                     Task 1. Cloud VPC setup"
@@ -45,7 +47,7 @@ echo "                        Create firewall rules"
 echo "----------------------------------------------------------------------"
 gcloud compute firewall-rules create vpc-demo-allow-internal \
     --network=vpc-demo \
-    --acction=ALLOW \
+    --action=ALLOW \
     --rules=icmp,tcp:0-65535,udp:0-65535 \
     --source-ranges=10.0.0.0/8
 
