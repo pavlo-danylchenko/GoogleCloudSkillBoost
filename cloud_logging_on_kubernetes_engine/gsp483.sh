@@ -64,7 +64,7 @@ if [ -z "$IP_ADDRESS" ]; then
 else
     for i in {1..5}
     do
-        curl -v "http://$IP_ADDRESS:$PORT"
+        curl "http://$IP_ADDRESS:$PORT"
     done
 fi
 
