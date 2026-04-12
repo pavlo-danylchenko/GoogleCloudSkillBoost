@@ -48,14 +48,14 @@ echo "----------------------------------------------------------------------"
 gcloud compute firewall-rules create vpc-demo-allow-internal \
     --network=vpc-demo \
     --action=ALLOW \
-    --rules=icmp,tcp:0-65535,udp:0-65535 \
+    --rules=tcp:0-65535,udp:0-65535,icmp \
     --source-ranges=10.0.0.0/8
 
 
 gcloud compute firewall-rules create vpc-demo-allow-ssh-icmp \
     --network=vpc-demo \
     --action=ALLOW \
-    --rules=icmp,tcp:22
+    --rules=tcp:22,icmp
 
 
 echo "----------------------------------------------------------------------"
@@ -90,13 +90,13 @@ echo "----------------------------------------------------------------------"
 gcloud compute firewall-rules create on-prem-allow-internal \
     --network=on-prem \
     --action=ALLOW \
-    --rules=icmp,tcp:0-65535,udp0-65535 \
+    --rules=tcp:0-65535,udp:0-65535,icmp \
     --source-ranges=192.168.0.0/16
 
 gcloud compute firewall-rules create on-prem-allow-ssh-icmp \
     --network=on-prem \
     --action=ALLOW \
-    --rules=icmp,rdp,tcp:22
+    --rules=tcp:22,icmp,rdp
 
 
 echo "----------------------------------------------------------------------"
@@ -247,13 +247,13 @@ echo "----------------------------------------------------------------------"
 gcloud compute firewall-rules create vpc-demo-allow-subnets-from-on-prem \
     --network=vpc-demo \
     --action=ALLOW \
-    --rules=icmp,tcp,udp \
+    --rules=tcp,udp,icmp \
     --source-ranges=192.168.1.0/24
 
 gcloud compute firewall-rules create on-prem-allow-subnets-from-vpc-demo \
     --network=on-prem \
     --action=ALLOW \
-    --rules=icmp,tcp,udp \
+    --rules=tcp,udp,icmp \
     --source-ranges=10.1.1.0/24,10.2.1.0/24
 
 
