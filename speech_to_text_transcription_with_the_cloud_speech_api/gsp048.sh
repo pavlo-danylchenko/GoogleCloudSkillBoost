@@ -104,15 +104,11 @@ EOF
 echo "Sending the script to the VM instance ..."
 # gcloud compute scp ./start.sh linux-instance:~/ --zone=$ZONE
 
-# WARM-UP
-gcloud compute ssh linux-instance --zone=$ZONE --quiet --command="true"
-
 # To execute once:
 gcloud compute ssh linux-instance \
     --zone=$ZONE \
     --quiet \
     --project=$DEVSHELL_PROJECT_ID \
-    --tunnel-through-iap \
     --command="bash -s" < ./start.sh
 
 
