@@ -23,21 +23,20 @@ echo "======================================================================"
 gcloud services enable apikeys.googleapis.com
 
 # 2. Create the API key
-gcloud alpha services api-keys create --display-name="Speech-to-Text Key"
+gcloud services api-keys create --display-name="Speech-to-Text Key"
 
 # 3. Wait a few seconds for the key to be fully provisioned
 sleep 3
 
 # 4. Get the Key ID and the Key String
-export KEY_NAME=$(gcloud alpha services api-keys list --filter="displayName='Speech-to-Text Key'" --format="value(name)")
-export API_KEY=$(gcloud alpha services api-keys list --filter="displayName='Speech-to-Text Key'" --format="value(keyString)")
+export KEY_NAME=$(gcloud services api-keys list --filter="displayName='Speech-to-Text Key'" --format="value(name)")
+export API_KEY=$(gcloud services api-keys get-key-string $KEY_NAME --format="value(keyString)")
 
 # 5. Restrict the key to only the Speech-to-Text API
-gcloud alpha services api-keys update $KEY_NAME --api-target=service=speech.googleapis.com
+gcloud services api-keys update $KEY_NAME --api-target=service=speech.googleapis.com
 
 echo "SUCCESS: API Key created and restricted."
 echo "You can now use \$API_KEY in your curl requests."
-
 
 
 # SSH to the VM instance and set the API key as a metadata value
@@ -50,6 +49,7 @@ cat > start.sh << 'EOF'
 #!/bin/bash
 
 export API_KEY=$(curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/API_KEY)
+echo "API Key retrieved from metadata: $API_KEY"
 
 echo "======================================================================"
 echo "                  Task 2. Create your API request"
@@ -75,8 +75,9 @@ curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json 
 
 echo "The analysis is complete. The results has been saved to result.json"
 
-read -p "Check the progress to verify the objective and Press [Enter] key to continue with the next task..."
-
+# read -p "Check the progress to verify the objective and Press [Enter] key to continue with the next task..."
+echo "Check the progress to verify the objective and Press [Enter] key to continue with the next task (you have 120 sec to do that)..."
+sleep 120
 
 echo "======================================================================"
 echo "     Task 4. Speech-to-Text transcription in different languages"
@@ -103,11 +104,15 @@ EOF
 echo "Sending the script to the VM instance ..."
 # gcloud compute scp ./start.sh linux-instance:~/ --zone=$ZONE
 
+# WARM-UP
+gcloud compute ssh linux-instance --zone=$ZONE --quiet --command="true"
+
 # To execute once:
 gcloud compute ssh linux-instance \
     --zone=$ZONE \
     --quiet \
     --project=$DEVSHELL_PROJECT_ID \
+    --tunnel-through-iap \
     --command="bash -s" < ./start.sh
 
 
