@@ -33,8 +33,6 @@ sed -i -e 's/us-central1/'"$REGION"'/g' -e 's/python3/'"python3.12"'/g' prepare_
 echo "======================================================================"
 echo "            Create and connect to a Kubernetes Engine cluster"
 echo "======================================================================"
-gcloud container clausters create quiz-cluster --
-
 
 gcloud container clusters create quiz-cluster \
     --project=$DEVSHELL_PROJECT_ID \
