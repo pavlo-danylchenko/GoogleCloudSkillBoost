@@ -29,7 +29,7 @@ gcloud compute instance-groups unmanaged create $REGION-instance-group \
     --project=$DEVSHELL_PROJECT_ID
 
 gcloud compute instance-groups unmanaged create $REGION_2-instance-group \
-    --zone=$ZONE \
+    --zone=$ZONE_2 \
     --project=$DEVSHELL_PROJECT_ID
 
 
@@ -134,4 +134,3 @@ gcloud compute forwarding-rules create http-frontend \
     --target-http-proxy=http-lb-proxy \
     --global \
     --ports=80
-
