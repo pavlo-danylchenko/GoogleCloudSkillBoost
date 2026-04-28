@@ -22,8 +22,6 @@ export REGION_2=$(echo $ZONE_2 | cut -d '-' -f 1-2)
 echo "======================================================================"
 echo "                  Task 1. Create Instance Groups"
 echo "======================================================================"
-# Replace [REGION_GROUP_NAME] with your group name (e.g., region-instance-group)
-# Replace [ZONE] with your specific zone (e.g., us-central1-a)
 gcloud compute instance-groups unmanaged create $REGION-instance-group \
     --zone=$ZONE \
     --project=$DEVSHELL_PROJECT_ID
@@ -134,3 +132,7 @@ gcloud compute forwarding-rules create http-frontend \
     --target-http-proxy=http-lb-proxy \
     --global \
     --ports=80
+
+echo "======================================================================"
+echo "                       JOB is DONE !!!"
+echo "======================================================================"
