@@ -18,8 +18,6 @@ echo "======================================================================"
 gcloud services enable cloudaicompanion.googleapis.com
 gcloud container clusters list
 
-kubectl get nodes
-
 
 echo "======================================================================"
 echo "                   Task 2. Deploy an application"
@@ -29,6 +27,8 @@ cd microservices-demo
 
 gcloud container clusters get-credentials central --zone $ZONE
 kubectl apply -f release/kubernetes-manifests.yaml
+
+kubectl get nodes
 
 export EXTERNAL_IP=$(kubectl get service frontend-external | awk 'BEGIN { cnt=0; } { cnt+=1; if (cnt > 1) print $4; }')
 curl -o /dev/null -s -w "%{http_code}\n"  http://$EXTERNAL_IP
