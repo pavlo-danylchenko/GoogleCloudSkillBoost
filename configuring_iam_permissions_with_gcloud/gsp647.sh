@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
