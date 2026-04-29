@@ -117,12 +117,10 @@ export POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}')
 echo "----------------------------------------------------------------------"
 echo "                          Simulate traffic"
 echo "----------------------------------------------------------------------"
-#!/bin/bash
 echo "Targeting pod-2 at IP: $POD_2_IP"
 
-# 2. Execute the ping from pod-1
 echo "Starting ping from pod-1 to pod-2..."
-kubectl exec pod-1 -- ping -c 50000 $POD_2_IP
+kubectl exec pod-1 -- ping -c 100 $POD_2_IP
 
 read -p "Examine flow logs, create a sink, run SQL request and hit ENTER ..."
 
@@ -139,7 +137,7 @@ read -p "CHECK the TASK PROGRESS and hit ENTER ..."
 kubectl get pod pod-1 pod-2 --output wide
 
 export POD_2_IP=$(kubectl get pod pod-2 -o jsonpath='{.status.podIP}')
-kubectl exec pod-1 -- ping -c 50000 $POD_2_IP
+kubectl exec pod-1 -- ping -c 100 $POD_2_IP
 
 echo "======================================================================"
 echo "                        JOB is DONE !!!"
