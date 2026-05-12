@@ -118,7 +118,6 @@ docker stop $(docker ps -q)
 docker rm $(docker ps -aq)
 
 docker rmi $REGION-docker.pkg.dev/$PROJECT_ID/my-repository/node-app:0.2
-docker rmi node:lts
 docker rmi -f $(docker images -aq) # remove remaining images
 docker images
 
