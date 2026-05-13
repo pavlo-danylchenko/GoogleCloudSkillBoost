@@ -34,7 +34,7 @@ echo "            Task 4. Deploy an application to the cluster"
 echo "======================================================================"
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
 kubectl expose deployment hello-server --type=LoadBalancer --port 8080
-sleep 5
+sleep 10
 
 export EXTERNAL_IP=$(kubectl get svc hello-server -n default -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "External IP is: $EXTERNAL_IP"
