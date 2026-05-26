@@ -29,6 +29,7 @@ echo "======================================================================"
 kubectl create deployment nginx --image=nginx:1.27.0
 kubectl get pods
 kubectl expose deployment nginx --port=80 --type=LoadBalancer
+sleep 10
 export EXTERNAL_IP=$(kubectl get services nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 curl http://$EXTERNAL_IP:80
 
