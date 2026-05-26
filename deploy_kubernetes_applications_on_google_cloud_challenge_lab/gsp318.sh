@@ -33,18 +33,23 @@ RUN go install -v
 ENTRYPOINT ["app","-single=true","-port=8080"]
 EOF
 
-docker build -t IMAGE_NAME:TAG_NAME .
+docker build -t $IMAGE_NAME:$TAG_NAME .
 
 
 echo "======================================================================"
 echo "            Task 2. Test the created Docker image"
 echo "======================================================================"
-docker run -p 8080:8080 --name my-app -d valkyrie-prod:v0.0.2
+docker run -p 8080:8080 --name my-app -d $IMAGE_NAME:$TAG_NAME
 
 
 echo "======================================================================"
 echo "        Task 3. Push the Docker image to the Artifact Registry"
 echo "======================================================================"
+gcloud artifacts repositories create $REPO_NAME \
+    --repository-format=docker \
+    --location=$REGION \
+    --description="Docker repository for Containers"
+
 gcloud auth configure-docker $REGION-docker.pkg.dev
 export IMAGE_PATH=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/$REPO_NAME/$IMAGE_NAME:$TAG_NAME
 
