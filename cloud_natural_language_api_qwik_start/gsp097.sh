@@ -27,7 +27,7 @@ gcloud iam service-accounts keys create ~/key.json \
 
 sleep 5
 
-export GOOGLE_APPLICATION_CREDEBTIALS="/home/USER/key.json"
+export GOOGLE_APPLICATION_CREDENTIALS="/home/USER/key.json"
 
 
 echo "======================================================================"
