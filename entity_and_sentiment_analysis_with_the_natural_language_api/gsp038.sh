@@ -27,7 +27,7 @@ API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="valu
 
 gcloud compute instances add-metadata linux-instance \
     --zone=$ZONE \
-    --project=$PROJECT_ID \
+    --project=$DEVSHELL_PROJECT_ID \
     --metadata=API_KEY=$API_KEY
 
 
