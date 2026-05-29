@@ -37,13 +37,8 @@ cd ~/monolith-to-microservices
 ./deploy-monolith.sh
 sleep 20
 
-EXTERNAL_IP=""
-while [ -z "$EXTERNAL_IP" ]; do
-  echo "Waiting for the IP for monolith..."
-  export MONOLITH_IP=$(kubectl get svc monolith \
+export MONOLITH_IP=$(kubectl get svc monolith \
         -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  [ -z "$MONOLITH_IP" ] && sleep 5
-done
 
 echo "External IP is: $MONOLITH_IP"
 
@@ -72,7 +67,7 @@ echo "----------------------------------------------------------------------"
 echo "                         Expose GKE container"
 echo "----------------------------------------------------------------------"
 kubectl expose deployment orders --type=LoadBalancer --port 80 --target-port 8081
-sleep 20
+sleep 30
 
 export ORDERS_IP=$(kubectl get svc orders -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "Orders microservice is available at http://$ORDERS_IP"
@@ -107,8 +102,8 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/products:1.0.0 .
 
 kubectl create deployment products --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/products:1.0.0
 
-kubectl expose deployment products --type=LoadBalancer --port=80 ---target-port=8082
-sleep 20
+kubectl expose deployment products --type=LoadBalancer --port=80 --target-port=8082
+sleep 30
 export PRODUCTS_IP=$(kubectl get svc products -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "PRODUCTS microservice is available at http://$PRODUCTS_IP"
 curl -s "http://$PRODUCTS_IP"
