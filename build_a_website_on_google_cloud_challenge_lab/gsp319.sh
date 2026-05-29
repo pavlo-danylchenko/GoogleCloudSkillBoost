@@ -60,7 +60,6 @@ cd ~/monolith-to-microservices/microservices/src/products
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/$PRODUCTS_IDENTIFIER:1.0.0 .
 
 
-
 echo "======================================================================"
 echo "               Task 4. Deploy the new microservices"
 echo "======================================================================"
