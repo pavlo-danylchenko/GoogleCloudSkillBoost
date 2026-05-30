@@ -20,6 +20,7 @@ echo "======================================================================"
 git clone https://github.com/googlecodelabs/monolith-to-microservices.git
 cd ~/monolith-to-microservices
 ./setup.sh
+cd ~/monolith-to-microservices/monolith
 
 
 echo "======================================================================"
