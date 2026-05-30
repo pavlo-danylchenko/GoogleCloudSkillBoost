@@ -49,6 +49,7 @@ gcloud compute instances create bigquery-instance \
     --service-account=bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
     --scopes=https://www.googleapis.com/auth/cloud-platform
 
+sleep 15
 
 echo "----------------------------------------------------------------------"
 echo "            Put the example code on a Compute Engine instance"
