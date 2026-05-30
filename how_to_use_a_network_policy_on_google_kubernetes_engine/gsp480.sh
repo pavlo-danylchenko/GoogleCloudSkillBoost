@@ -77,7 +77,7 @@ echo "======================================================================"
 EOF
 
 
-gcloud compute ssh linux-instance \
+gcloud compute ssh gke-demo-bastion \
     --zone=$ZONE \
     --quiet \
     --project=$PROJECT_ID \
