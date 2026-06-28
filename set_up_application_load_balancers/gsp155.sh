@@ -105,7 +105,7 @@ gcloud compute addresses create lb-ipv4-1 \
   --ip-version=IPV4 \
   --global
 
-IP_ADDRESS = $(gcloud compute addresses describe lb-ipv4-1 \
+IP_ADDRESS=$(gcloud compute addresses describe lb-ipv4-1 \
   --format="get(address)" \
   --global)
 
@@ -137,6 +137,7 @@ gcloud compute forwarding-rules create http-content-rule \
    --target-http-proxy=http-lb-proxy \
    --ports=80
 
+sleep 10
 
 echo "======================================================================"
 echo "             Task 4. Test traffic sent to your instances"
