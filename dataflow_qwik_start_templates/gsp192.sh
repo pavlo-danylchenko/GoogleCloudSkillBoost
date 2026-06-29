@@ -12,28 +12,31 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 gcloud config set compute/region $REGION
 gcloud config set compute/zone $ZONE
 
-export PROJECT_ID=$(gcloud info --format='value(config.project)')
-export BUCKET=$PROJECT_ID
+# export PROJECT_ID=$(gcloud info --format='value(config.project)')
+# export BUCKET=$PROJECT_ID
 
 
 echo "======================================================================"
 echo "   Task 1. Ensure that the Dataflow API is successfully re-enabled"
 echo "======================================================================"
-gcloud services disable dataflow.googleapis.com --project $PROJECT_ID --force
-gcloud services enable dataflow.googleapis.com --project $PROJECT_ID
+gcloud services disable dataflow.googleapis.com --project $DEVSHELL_PROJECT_ID --force
+gcloud services enable dataflow.googleapis.com --project $DEVSHELL_PROJECT_ID
 
 echo "======================================================================"
 echo "Task 2. Create a BigQuery dataset, BigQuery table, and Cloud Storage bucket using Cloud Shell"
 echo "======================================================================"
 bq mk taxirides
 
-bq mk --table taxirides.realtime --time_partitioning_field timestamp \
-    --schema ride_id:string,point_idx:integer,latitude:float,longitude:float, timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,passenger_count:integer
+bq mk \
+    --time_partitioning_field timestamp \
+    --schema ride_id:string,point_idx:integer,latitude:float,longitude:float,\
+    timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,\
+    passenger_count:integer -t taxirides.realtime
 
 echo "----------------------------------------------------------------------"
 echo "           Create a Cloud Storage bucket using Cloud Shell"
 echo "----------------------------------------------------------------------"
-gsutil mb gs://$BUCKET
+gsutil mb gs://$DEVSHELL_PROJECT_ID
 
 echo "======================================================================"
 echo "                    Task 4. Run the pipeline"
@@ -42,8 +45,8 @@ gcloud dataflow jobs run iotflow \
     --gcs-location gs://dataflow-templates-$REGION/latest/PubSub_to_BigQuery \
     --region $REGION \
     --worker-machine-type e2-medium \
-    --staging-location gs://$BUCKET/temp \
-    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=$PROJECT_ID:taxirides.realtime
+    --staging-location gs://$DEVSHELL_PROJECT_ID/temp \
+    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=$DEVSHELL_PROJECT_ID:taxirides.realtime
 
 echo "======================================================================"
 echo "                           JOB is DONE!"
