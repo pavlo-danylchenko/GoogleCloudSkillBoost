@@ -27,11 +27,8 @@ echo "Task 2. Create a BigQuery dataset, BigQuery table, and Cloud Storage bucke
 echo "======================================================================"
 bq mk taxirides
 
-bq mk \
-    --time_partitioning_field timestamp \
-    --schema ride_id:string,point_idx:integer,latitude:float,longitude:float,\
-    timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,\
-    passenger_count:integer -t taxirides.realtime
+bq mk --table taxirides.realtime --time_partitioning_field timestamp \
+    --schema ride_id:string,point_idx:integer,latitude:float,longitude:float, timestamp:timestamp,meter_reading:float,meter_increment:float,ride_status:string,passenger_count:integer
 
 echo "----------------------------------------------------------------------"
 echo "           Create a Cloud Storage bucket using Cloud Shell"
@@ -46,7 +43,6 @@ gcloud dataflow jobs run iotflow \
     --region $REGION \
     --worker-machine-type e2-medium \
     --staging-location gs://$BUCKET/temp \
-    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=$BUCKET:taxirides.realtime
-
+    --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=$PROJECT_ID:taxirides.realtime
 
 echo "JOB is DONE!"
