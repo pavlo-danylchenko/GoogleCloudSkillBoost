@@ -45,4 +45,6 @@ gcloud dataflow jobs run iotflow \
     --staging-location gs://$BUCKET/temp \
     --parameters inputTopic=projects/pubsub-public-data/topics/taxirides-realtime,outputTableSpec=$PROJECT_ID:taxirides.realtime
 
-echo "JOB is DONE!"
+echo "======================================================================"
+echo "                           JOB is DONE!"
+echo "======================================================================"
