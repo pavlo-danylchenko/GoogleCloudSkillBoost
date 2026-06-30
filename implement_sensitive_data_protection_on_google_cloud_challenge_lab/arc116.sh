@@ -460,9 +460,9 @@ curl -s \
 "https://dlp.googleapis.com/v2/projects/$DEVSHELL_PROJECT_ID/locations/us/jobTriggers"
 
 
-echo "Waiting 30 seconds to ensure job trigger is ready"
+echo "Waiting 60 seconds to ensure job trigger is ready"
 echo
-for ((i=30; i>=0; i--)); do
+for ((i=60; i>=0; i--)); do
   echo -ne "\rTime remaining $i seconds"
   sleep 1
 done
