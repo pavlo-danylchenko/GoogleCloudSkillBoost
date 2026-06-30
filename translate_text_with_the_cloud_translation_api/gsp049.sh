@@ -10,7 +10,7 @@ export REGION=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 gcloud config set compute/region $REGION
 
-gcloud alpha services api-keys create \
+gcloud services api-keys create \
     --display-name="APIkey"
 
 
