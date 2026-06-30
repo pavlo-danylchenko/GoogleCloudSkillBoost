@@ -39,7 +39,7 @@ echo "======================================================================"
 gcloud iam service-accounts create tts-qwiklab
 gcloud iam service-accounts keys create tts-qwiklab.json --iam-account tts-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
 export GOOGLE_APPLICATION_CREDENTIALS=tts-qwiklab.json
-export ACCESS_TOKEN=$(gcloud auth print-access-token)
+export ACCESS_TOKEN=$(gcloud auth application-default print-access-token)
 
 echo "======================================================================"
 echo "                Task 4. Get a list of available voices"
