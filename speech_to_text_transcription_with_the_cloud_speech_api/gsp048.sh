@@ -75,9 +75,7 @@ curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json 
 
 echo "The analysis is complete. The results has been saved to result.json"
 
-# read -p "Check the progress to verify the objective and Press [Enter] key to continue with the next task..."
-echo "Check the progress to verify the objective and wait for 60 seconds ..."
-sleep 60
+read -p  "Check the progress to verify the objective for TASK #3 and press the [ENTER] to continue ..."
 
 echo "======================================================================"
 echo "     Task 4. Speech-to-Text transcription in different languages"
