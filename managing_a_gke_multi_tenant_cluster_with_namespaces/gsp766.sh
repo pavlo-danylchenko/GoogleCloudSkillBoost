@@ -59,6 +59,9 @@ gcloud projects add-iam-policy-binding ${GOOGLE_CLOUD_PROJECT} \
 echo "----------------------------------------------------------------------"
 echo "                         Kubernetes RBAC"
 echo "----------------------------------------------------------------------"
+kubectl create role pod-reader \
+    --resource=pods --verb=watch --verb=get --verb=list
+
 kubectl create -f developer-role.yaml
 
 kubectl create rolebinding team-a-developers \
