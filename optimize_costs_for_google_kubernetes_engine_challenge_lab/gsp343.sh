@@ -50,7 +50,7 @@ for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=default-pool -o
 done
 
 for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=default-pool -o=name); do
-    kubectl drain --force --ignore-daemonsets --delete-local-data --grace-period=10 "$node"
+    kubectl drain --force --ignore-daemonsets --delete-emptydir-data --grace-period=10 "$node"
 done
 
 gcloud container node-pools delete default-pool \
