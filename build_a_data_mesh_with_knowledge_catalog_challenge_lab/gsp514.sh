@@ -79,76 +79,76 @@ gcloud dataplex assets create customer-orders \
 echo "======================================================================"
 echo "       Task 2. Create an aspect type and add an aspect to a zone"
 echo "======================================================================"
-cat > protected-data-aspect.json << EOF
-{
-  "displayName": "Protected Customer Data Aspect",
-  "metadataTemplate": {
-    "name": "protected-customer-data-aspect",
-    "type": "record",
-    "recordFields": [
-      {
-        "name": "raw-data-flag",
-        "index": 1,
-        "type": "enum",
-        "annotations": {
-          "displayName": "Raw Data Flag"
-        },
-        "constraints": {
-          "required": true
-        },
-        "enumValues": [
-          {
-            "name": "YES",
-            "index": 1,
-            "annotations": {
-              "displayName": "Yes"
-            }
-          },
-          {
-            "name": "NO",
-            "index": 2,
-            "annotations": {
-              "displayName": "No"
-            }
-          }
-        ]
-      },
-      {
-        "name": "protected-contact-information-flag",
-        "index": 2,
-        "type": "enum",
-        "annotations": {
-          "displayName": "Protected Contact Information Flag"
-        },
-        "constraints": {
-          "required": true
-        },
-        "enumValues": [
-          {
-            "name": "YES",
-            "index": 1,
-            "annotations": {
-              "displayName": "Yes"
-            }
-          },
-          {
-            "name": "NO",
-            "index": 2,
-            "annotations": {
-              "displayName": "No"
-            }
-          }
-        ]
-      }
-    ]
-  }
-}
-EOF
+# cat > protected-data-aspect.json << EOF
+# {
+#   "displayName": "Protected Customer Data Aspect",
+#   "metadataTemplate": {
+#     "name": "protected-customer-data-aspect",
+#     "type": "record",
+#     "recordFields": [
+#       {
+#         "name": "raw-data-flag",
+#         "index": 1,
+#         "type": "enum",
+#         "annotations": {
+#           "displayName": "Raw Data Flag"
+#         },
+#         "constraints": {
+#           "required": true
+#         },
+#         "enumValues": [
+#           {
+#             "name": "YES",
+#             "index": 1,
+#             "annotations": {
+#               "displayName": "Yes"
+#             }
+#           },
+#           {
+#             "name": "NO",
+#             "index": 2,
+#             "annotations": {
+#               "displayName": "No"
+#             }
+#           }
+#         ]
+#       },
+#       {
+#         "name": "protected-contact-information-flag",
+#         "index": 2,
+#         "type": "enum",
+#         "annotations": {
+#           "displayName": "Protected Contact Information Flag"
+#         },
+#         "constraints": {
+#           "required": true
+#         },
+#         "enumValues": [
+#           {
+#             "name": "YES",
+#             "index": 1,
+#             "annotations": {
+#               "displayName": "Yes"
+#             }
+#           },
+#           {
+#             "name": "NO",
+#             "index": 2,
+#             "annotations": {
+#               "displayName": "No"
+#             }
+#           }
+#         ]
+#       }
+#     ]
+#   }
+# }
+# EOF
 
-gcloud dataplex aspect-types create protected-customer-data-aspect \
-    --location=$REGION \
-    --project=$DEVSHELL_PROJECT_ID \
-    --metadata-template-file-name=protected-data-aspect.json
+# gcloud dataplex aspect-types create protected-customer-data-aspect \
+#     --location=$REGION \
+#     --project=$DEVSHELL_PROJECT_ID \
+#     --metadata-template-file-name=protected-data-aspect.json
 
 echo "Add protected-customer-data-aspect to the Raw Customer Zone using a value of Yes for both flags manually."
 read "Press [ENTER] to continue..."
