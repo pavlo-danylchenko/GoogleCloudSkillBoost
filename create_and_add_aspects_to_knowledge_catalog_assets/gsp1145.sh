@@ -99,7 +99,7 @@ EOF
 gcloud dataplex aspect-types create protected-data-aspect \
     --location=$REGION \
     --project=$DEVSHELL_PROJECT_ID \
-    --file=protected-data-aspect.json
+    --metadata-template-file-name=protected-data-aspect.json
 
 echo "======================================================================"
 echo "                   Task 3. Add an aspect to assets"
