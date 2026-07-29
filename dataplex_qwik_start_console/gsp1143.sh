@@ -44,7 +44,8 @@ gcloud dataplex zones create temperature-raw-data \
 echo "======================================================================"
 echo "                    Task 3. Attach an asset to a zone"
 echo "======================================================================"
-gsutil mb gs://$DEVSHELL_PROJECT_ID --location=$REGION
+gsutil mb -l $REGION gs://$DEVSHELL_PROJECT_ID
+
 
 gcloud dataplex assets create measurements \
     --location=$REGION \
@@ -64,7 +65,7 @@ gcloud dataplex assets delete measurements --location=$REGION --zone=temperature
 
 gcloud dataplex zones delete temperature-raw-data --location=$REGION --lake=sensors --quiet
 
-gcloud dataplex lakes delete sensors --location=$REGION --quiet 
+gcloud dataplex lakes delete sensors --location=$REGION --quiet
 
 echo "======================================================================"
 echo "                         JOB is DONE !!!"
