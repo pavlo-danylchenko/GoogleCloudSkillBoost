@@ -151,7 +151,7 @@ echo "======================================================================"
 #     --metadata-template-file-name=protected-data-aspect.json
 
 echo "Add protected-customer-data-aspect to the Raw Customer Zone using a value of Yes for both flags manually."
-read "Press [ENTER] to continue..."
+read -p "Press [ENTER] to continue..."
 
 
 echo "======================================================================"
