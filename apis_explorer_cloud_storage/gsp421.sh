@@ -75,6 +75,8 @@ curl --request POST \
   --data '{}' \
   --compressed
 
+read -p "Check the progress and Press [ENTER] key to continue..."
+
 echo "======================================================================"
 echo "            Task 5. Delete files from a Cloud Storage bucket"
 echo "======================================================================"
@@ -90,6 +92,7 @@ curl --request DELETE \
   --header 'Accept: application/json' \
   --compressed
 
+read -p "Check the progress and Press [ENTER] key to continue..."
 
 echo "======================================================================"
 echo "              Task 6. Delete your Cloud Storage bucket"
