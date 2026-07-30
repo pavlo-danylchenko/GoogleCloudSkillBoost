@@ -61,12 +61,12 @@ EOF
 
 npm install
 
-# PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$DEVSHELL_PROJECT_ID" --format='value(project_number)')
-# SERVICE_ACCOUNT=$(gsutil kms serviceaccount -p $PROJECT_NUMBER)
+PROJECT_NUMBER=$(gcloud projects list --filter="project_id:$DEVSHELL_PROJECT_ID" --format='value(project_number)')
+SERVICE_ACCOUNT=$(gsutil kms serviceaccount -p $PROJECT_NUMBER)
 
-# gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-#   --member serviceAccount:$SERVICE_ACCOUNT \
-#   --role roles/pubsub.publisher
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+  --member serviceAccount:$SERVICE_ACCOUNT \
+  --role roles/pubsub.publisher
 
 gcloud functions deploy $CSF_NAME \
   --gen2 \
