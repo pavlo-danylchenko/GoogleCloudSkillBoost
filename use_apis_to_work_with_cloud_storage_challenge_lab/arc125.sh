@@ -81,6 +81,23 @@ curl -X POST --data-binary @access.json \
     "https://storage.googleapis.com/storage/v1/b/$DEVSHELL_PROJECT_ID-bucket-2/o/map.jpg/acl"
 
 
+# OPTIONS #2
+# Create a JSON file that contains the following information:
+# {
+#   "bindings":[
+#     {
+#       "role": "roles/storage.objectViewer",
+#       "members":["allUsers"]
+#     }
+#   ]
+# }
+# Use cURL to call the JSON API with a PUT Bucket request:
+# curl -X PUT --data-binary @JSON_FILE_NAME \
+#   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+#   -H "Content-Type: application/json" \
+#   "https://storage.googleapis.com/storage/v1/b/BUCKET_NAME/iam"
+
+
 read -p "Check the progress and Press [ENTER] key to continue..."
 
 
