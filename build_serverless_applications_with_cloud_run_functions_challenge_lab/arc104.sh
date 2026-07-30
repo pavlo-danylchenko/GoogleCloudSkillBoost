@@ -32,7 +32,7 @@ gcloud config set run/region $REGION
 echo "======================================================================"
 echo "                 Task 1. Create a Cloud Storage bucket"
 echo "======================================================================"
-gsutil mb -l $REGION $DEVSHELL_PROJECT_ID
+gsutil mb -l $REGION gs://$DEVSHELL_PROJECT_ID
 
 
 echo "======================================================================"
@@ -42,7 +42,7 @@ mkdir ~/cloud-storage && cd $_
 cat > index.js << EOF
 const functions = require('@google-cloud/functions-framework');
 
-functions.cloudEvent('eventStorage', (cloudevent) => {
+functions.cloudEvent("$CSF_NAME", (cloudevent) => {
   console.log('A new event in your Cloud Storage bucket has been logged!');
   console.log(cloudevent);
 });
@@ -88,7 +88,7 @@ mkdir ~/gcf_hello_world && cd $_
 cat > index.js << EOF
 const functions = require('@google-cloud/functions-framework');
 
-functions.http('helloWorld', (req, res) => {
+functions.http("$HTTP_F_NAME", (req, res) => {
   res.status(200).send('HTTP function (2nd gen) has been called!');
 });
 EOF
