@@ -63,7 +63,7 @@ echo "======================================================================"
 
 gcloud functions deploy nodejs-pubsub-function \
   --gen2 \
-  --runtime=nodejs20 \
+  --runtime=nodejs22 \
   --region=$REGION \
   --source=. \
   --entry-point=helloPubSub \
