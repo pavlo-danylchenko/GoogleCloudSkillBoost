@@ -16,7 +16,6 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
-
 echo "======================================================================"
 echo "                      Task 1. Explore the instance"
 echo "======================================================================"
@@ -31,6 +30,7 @@ gcloud spanner databases execute-sql banking-db \
            VALUES
            ('bdaaaa97-1b4b-4e58-b4ad-84030de92235', 'Richard Nelson', 'Ada Ohio')"
 
+sleep 10
 
 echo "======================================================================"
 echo "                Task 3. Insert data through a client library"
@@ -58,6 +58,7 @@ EOF
 
 python3 insert.py
 
+sleep 10
 
 echo "======================================================================"
 echo "          Task 4. Insert batch data through a client library"
@@ -91,17 +92,17 @@ EOF
 
 python3 batch_insert.py
 
-
 echo "======================================================================"
 echo "               Task 5. Load data using Dataflow"
 echo "======================================================================"
-gcloud storage folders create gs://$DEVSHELL_PROJECT_ID/tmp/
+gsutil mb gs://$DEVSHELL_PROJECT_ID
+touch emptyfile
+gsutil cp emptyfile gs://$DEVSHELL_PROJECT_ID/tmp/emptyfile
 
 gcloud services disable dataflow.googleapis.com --force
 gcloud services enable dataflow.googleapis.com
 
 sleep 15
-
 
 gcloud dataflow jobs run spanner-load \
     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
@@ -109,15 +110,33 @@ gcloud dataflow jobs run spanner-load \
     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
     --parameters instanceId=banking-instance,databaseId=banking-db,importManifest=gs://spls/gsp1049/manifest.json
 
+echo "CHECK JOB STATUS: https://console.cloud.google.com/dataflow/jobs?project=$DEVSHELL_PROJECT_ID"
+
+# gcloud dataflow jobs run spanner-load \
+#     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
+#     --region $REGION \
+#     --num-workers 2 \
+#     --worker-machine-type e2-medium \
+#     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
+#     --additional-experiments shuffle_mode=auto,use_runner_v2 \
+#     --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,~fieldQualifier="~trailingDelimiter=true~handleNewLine=false~maxNumRows=500
+
+# gcloud dataflow jobs run spanner-load \
+#     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
+#     --region $REGION \
+#     --num-workers 2 \
+#     --worker-machine-type e2-medium \
+#     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
+#     --additional-experiments shuffle_mode=auto,use_runner_v2 \
+#     --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,
 
 echo "======================================================================"
 echo "                   Task 6. Backup your database"
 echo "======================================================================"
-gcloud spanner backups create banking-backup-001 \
-    --instance=banking-instance \
-    --database=banking-db \
-    --retention-period=1y
-
+# gcloud spanner backups create banking-backup-001 \
+#     --instance=banking-instance \
+#     --database=banking-db \
+#     --retention-period=1y
 
 echo "======================================================================"
 echo "                            JOB is DONE!"
