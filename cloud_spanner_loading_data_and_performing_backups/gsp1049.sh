@@ -107,28 +107,16 @@ sleep 15
 gcloud dataflow jobs run spanner-load \
     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
     --region $REGION \
+    --num-workers 2 \
+    --worker-machine-type e2-medium \
     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
-    --parameters instanceId=banking-instance,databaseId=banking-db,importManifest=gs://spls/gsp1049/manifest.json
+    --additional-experiments shuffle_mode=auto,use_runner_v2 \
+    --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,
+    # --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,~fieldQualifier="~trailingDelimiter=true~handleNewLine=false~maxNumRows=500
+
 
 echo "CHECK JOB STATUS: https://console.cloud.google.com/dataflow/jobs?project=$DEVSHELL_PROJECT_ID"
 
-# gcloud dataflow jobs run spanner-load \
-#     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
-#     --region $REGION \
-#     --num-workers 2 \
-#     --worker-machine-type e2-medium \
-#     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
-#     --additional-experiments shuffle_mode=auto,use_runner_v2 \
-#     --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,~fieldQualifier="~trailingDelimiter=true~handleNewLine=false~maxNumRows=500
-
-# gcloud dataflow jobs run spanner-load \
-#     --gcs-location gs://dataflow-templates-$REGION/latest/GCS_Text_to_Cloud_Spanner \
-#     --region $REGION \
-#     --num-workers 2 \
-#     --worker-machine-type e2-medium \
-#     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
-#     --additional-experiments shuffle_mode=auto,use_runner_v2 \
-#     --parameters ^~^instanceId=banking-instance~databaseId=banking-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://spls/gsp1049/manifest.json~columnDelimiter=,
 
 echo "======================================================================"
 echo "                   Task 6. Backup your database"
