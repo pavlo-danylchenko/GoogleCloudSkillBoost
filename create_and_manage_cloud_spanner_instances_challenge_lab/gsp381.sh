@@ -45,7 +45,7 @@ gcloud spanner databases ddl update banking-ops-db \
 
 gcloud spanner databases ddl update banking-ops-db \
     --instance=banking-ops-instance \
-    --ddl='CREATE TABLE PortfolioId (
+    --ddl='CREATE TABLE Portfolio (
             PortfolioId INT64 NOT NULL,
             Name STRING(MAX),
             ShortName STRING(MAX),
@@ -97,7 +97,7 @@ gcloud spanner databases execute-sql banking-ops-db \
 gcloud spanner databases execute-sql banking-ops-db \
     --instance=banking-ops-instance \
     --sql="INSERT INTO Product (ProductId, CategoryId, PortfolioId, ProductName, ProductAssetCode, ProductClass)
-           VALUES 
+           VALUES
                 (1, 1, 1, 'Checking Account', 'ChkAcct', 'Banking LOB'),
                 (2, 2, 2, 'Mutual Fund Consumer Goods', 'MFundCG', 'Investment LOB'),
                 (3, 3, 2, 'Annuity Early Retirement', 'AnnuFixed', 'Investment LOB'),
@@ -115,7 +115,7 @@ echo "======================================================================"
 gcloud services disable dataflow.googleapis.com --force
 gcloud services enable dataflow.googleapis.com
 
-sleep 30
+sleep 100
 
 cat > manifest.json << EOF
 {
@@ -150,8 +150,6 @@ gcloud dataflow jobs run spanner-load \
     --staging-location gs://$DEVSHELL_PROJECT_ID/tmp/ \
     --additional-experiments shuffle_mode=auto,use_runner_v2 \
     --parameters ^~^instanceId=banking-ops-instance~databaseId=banking-ops-db~spannerHost=https://batch-spanner.googleapis.com~importManifest=gs://$DEVSHELL_PROJECT_ID/manifest.json~columnDelimiter=,
-
-sleep 10
 
 echo "======================================================================"
 echo "               Task 6. Add a new column to an existing table"
