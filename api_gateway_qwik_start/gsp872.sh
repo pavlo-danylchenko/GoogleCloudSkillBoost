@@ -28,23 +28,24 @@ echo "======================================================================"
 git clone https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git
 cd nodejs-docs-samples/functions/helloworld/helloworldGet
 
-gcloud functions deploy helloGET \
-    --runtime node_gcp_runtime \
+gcloud functions deploy helloget \
+    --runtime nodejs22 \
     --trigger-http \
     --allow-unauthenticated \
     --region $REGION
 
-
 echo "======================================================================"
 echo "                    Task 2. Test the API backend"
 echo "======================================================================"
-gcloud functions describe helloGET --region $REGION
+# gcloud functions describe helloget --region $REGION --project=$DEVSHELL_PROJECT_ID
 
-URL=$(gcloud run services describe helloGET \
-  --region=$REGION \
-  --format="value(serviceConfig.uri)")
 
-curl -v $URL
+# URL=$(gcloud run services describe helloget \
+#   --region=$REGION \
+#   --format=json| jq -r .metadata.annotations.run.googleapis.com/custom-audiences
+# #   --format="value(URL)")
+
+curl -sL -w "\n\n" https://$REGION-$DEVSHELL_PROJECT_ID.cloudfunctions.net/helloGET
 
 echo "----------------------------------------------------------------------"
 echo "                    Create the API definition"
