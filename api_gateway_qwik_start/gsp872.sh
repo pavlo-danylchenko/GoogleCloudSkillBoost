@@ -19,7 +19,7 @@ gcloud config set run/region $REGION
 
 gcloud services enable apigateway.googleapis.com run.googleapis.com
 
-sleep 10
+sleep 30
 
 
 echo "======================================================================"
@@ -45,7 +45,7 @@ echo "======================================================================"
 #   --format=json| jq -r .metadata.annotations.run.googleapis.com/custom-audiences
 # #   --format="value(URL)")
 
-curl -sL -w "\n\n" https://$REGION-$DEVSHELL_PROJECT_ID.cloudfunctions.net/helloGET
+curl -sL -w "\n" https://$REGION-$DEVSHELL_PROJECT_ID.cloudfunctions.net/helloGET
 
 echo "----------------------------------------------------------------------"
 echo "                    Create the API definition"
