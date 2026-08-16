@@ -20,7 +20,22 @@ gcloud config set run/region $REGION
 gcloud services enable apigateway.googleapis.com --project $DEVSHELL_PROJECT_ID
 gcloud services enable run.googleapis.com
 
-sleep 40
+PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
+  --format="value(projectNumber)")
+
+SERVICE_ACCOUNT="$PROJECT_NUMBER-compute@developer.gserviceaccount.com"
+
+echo $SERVICE_ACCOUNT
+
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member="serviceAccount:$SERVICE_ACCOUNT" \
+    --role="roles/serviceusage.serviceUsageAdmin"
+
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member="serviceAccount:$SERVICE_ACCOUNT" \
+    --role="roles/artifactregistry.reader"
+
+sleep 30
 
 
 echo "======================================================================"
@@ -88,23 +103,6 @@ echo "======================================================================"
 gcloud api-gateway apis create $API_ID \
     --project=$DEVSHELL_PROJECT_ID \
     --display-name="Hello World API"
-
-PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
-  --format="value(projectNumber)")
-
-SERVICE_ACCOUNT="$PROJECT_NUMBER-compute@developer.gserviceaccount.com"
-
-echo $SERVICE_ACCOUNT
-
-# gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-#     --member="serviceAccount:$SERVICE_ACCOUNT" \
-#     --role="roles/serviceusage.serviceUsageAdmin"
-
-# gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-#     --member="serviceAccount:$SERVICE_ACCOUNT" \
-#     --role="roles/artifactregistry.reader"
-
-# sleep 30
 
 gcloud api-gateway api-configs create hello-world-config \
     --project=$DEVSHELL_PROJECT_ID \
