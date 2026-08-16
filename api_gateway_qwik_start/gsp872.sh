@@ -20,6 +20,8 @@ gcloud config set run/region $REGION
 gcloud services enable apigateway.googleapis.com --project $DEVSHELL_PROJECT_ID
 gcloud services enable run.googleapis.com
 
+sleep 20
+
 PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
   --format="value(projectNumber)")
 
