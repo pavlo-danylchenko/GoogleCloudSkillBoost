@@ -17,9 +17,10 @@ gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 gcloud config set run/region $REGION
 
-gcloud services enable apigateway.googleapis.com run.googleapis.com
+gcloud services enable apigateway.googleapis.com --project $DEVSHELL_PROJECT_ID
+gcloud services enable run.googleapis.com
 
-sleep 30
+sleep 40
 
 
 echo "======================================================================"
@@ -28,7 +29,7 @@ echo "======================================================================"
 git clone https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git
 cd nodejs-docs-samples/functions/helloworld/helloworldGet
 
-gcloud functions deploy helloget \
+gcloud functions deploy helloGET \
     --runtime nodejs22 \
     --trigger-http \
     --allow-unauthenticated \
@@ -186,6 +187,9 @@ gcloud api-gateway api-configs create hello-config \
     --backend-auth-service-account=$SERVICE_ACCOUNT
 
 gcloud api-gateway gateways update hello-gateway \
+    --location=$REGION \
+    --project=$DEVSHELL_PROJECT_ID \
+    --api=$API_ID \
     --api-config=hello-config
 
 
