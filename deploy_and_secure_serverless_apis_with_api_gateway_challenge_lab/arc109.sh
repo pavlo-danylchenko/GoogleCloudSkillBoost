@@ -22,6 +22,10 @@ gcloud services enable run.googleapis.com
 
 sleep 20
 
+gcloud pubsub topics create demo-topic
+gcloud pubsub subscriptions create demo-topic-sub \
+    --topic=demo-topic
+
 PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
   --format="value(projectNumber)")
 
@@ -43,7 +47,7 @@ sleep 10
 echo "======================================================================"
 echo "                  Task 1. Create a Cloud Run function"
 echo "======================================================================"
-mkdir gcfunction & cd $_
+mkdir gcfunction && cd $_
 
 cat > index.js << 'EOF'
 import { http } from '@google-cloud/functions-framework';
@@ -118,22 +122,22 @@ gcloud api-gateway api-configs create gcfunction-api \
     --backend-auth-service-account=$SERVICE_ACCOUNT
 
 gcloud api-gateway gateways create gcfunction-api \
-    --display-name="Hello Gateway" \
+    --display-name="gcfunction API" \
     --location=$REGION \
     --project=$DEVSHELL_PROJECT_ID \
     --api=$API_ID \
-    --api-config=hello-world-config
+    --api-config=gcfunction-api \
+    --quiet
 
 
 echo "======================================================================"
 echo " Task 3. Create a Pub/Sub Topic and Publish Messages via API Backend"
 echo "======================================================================"
-gcloud pubsub topics create demo-topic
 
-gcloud pubsub subscriptions create demo-topic-sub \
-    --topic=demo-topic
+# TOPIC creation part MOVED to the TOP of the SCRIPT.
+
 cd ~
-mkdir pubsub & cd &_
+mkdir pubsub && cd $_
 
 cat > package.json << EOF
 {
@@ -170,7 +174,7 @@ gcloud functions deploy gcfunction \
     --gen2 \
     --allow-unauthenticated \
     --region $REGION \
-    --entry-point=helloWorld \
+    --entry-point=helloHttp \
     --max-instances 5 \
     --source=./
 
