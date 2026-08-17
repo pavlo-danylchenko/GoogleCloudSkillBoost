@@ -20,8 +20,6 @@ gcloud config set run/region $REGION
 gcloud services enable apigateway.googleapis.com --project $DEVSHELL_PROJECT_ID
 gcloud services enable run.googleapis.com
 
-sleep 20
-
 gcloud pubsub topics create demo-topic
 gcloud pubsub subscriptions create demo-topic-sub \
     --topic=demo-topic
@@ -41,7 +39,7 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$SERVICE_ACCOUNT" \
     --role="roles/artifactregistry.reader"
 
-sleep 10
+sleep 30
 
 
 echo "======================================================================"
