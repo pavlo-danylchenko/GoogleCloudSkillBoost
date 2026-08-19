@@ -1,12 +1,14 @@
 #!/bin/bash
-
+SHOULD BE FIXED
 echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
+
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
@@ -25,9 +27,13 @@ gcloud auth login --quiet
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
+echo "----------------------------------------------------------------------"
+echo "        Create a new instance and updating the default zone"
+echo "----------------------------------------------------------------------"
 
 gcloud compute instances create lab-1 --zone $ZONE --machine-type=e2-standard-2
 
@@ -36,7 +42,7 @@ export NEW_ZONE=$(gcloud compute zones list \
     --format="value(name)" | shuf -n 1)
 gcloud config set compute/zone $NEW_ZONE
 
-read -p "CHECK the TASK PROGRESS and hit ENTER to continue..."
+read -p "CHECK the TASK PROGRESS and hit ANY KEY to continue..."
 
 echo "======================================================================"
 echo "    Task 2. Create and switch between multiple IAM configurations"
@@ -79,6 +85,7 @@ echo "export ZONE2=$ZONE_2" >> ~/.bashrc
 . ~/.bashrc
 gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=roles/viewer
 
+sleep 5
 
 echo "======================================================================"
 echo "                 Task 4. Test that user2 has access"
@@ -94,18 +101,22 @@ gcloud iam roles create devops \
     --project $PROJECTID2 \
     --permissions "compute.instances.create,compute.instances.delete,compute.instances.start,compute.instances.stop,compute.instances.update,compute.disks.create,compute.subnetworks.use,compute.subnetworks.useExternalIp,compute.instances.setMetadata,compute.instances.setServiceAccount"
 
+sleep 5
+
 echo "----------------------------------------------------------------------"
 echo "           Bind the role to the second account to both projects"
 echo "----------------------------------------------------------------------"
 gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=roles/iam.serviceAccountUser
 gcloud projects add-iam-policy-binding $PROJECTID2 --member user:$USERID2 --role=projects/$PROJECTID2/roles/devops
 
+sleep 5
+
 
 echo "----------------------------------------------------------------------"
 echo "               Test the newly assigned permissions"
 echo "----------------------------------------------------------------------"
 gcloud config configurations activate user2
-gcloud compute instances create lab-2 --zone $ZONE_2 --machine-type=e2-standard-2
+gcloud compute instances create lab-2 --zone $ZONE2 --machine-type=e2-standard-2
 
 
 echo "======================================================================"
@@ -120,6 +131,9 @@ gcloud projects add-iam-policy-binding $PROJECTID2 \
     --member serviceAccount:$SA \
     --role=roles/iam.serviceAccountUser
 
+sleep 5
+
+
 echo "======================================================================"
 echo "       Task 6. Using the service account with a compute instance"
 echo "======================================================================"
@@ -127,14 +141,17 @@ gcloud projects add-iam-policy-binding $PROJECTID2 \
     --member serviceAccount:$SA \
     --role=roles/compute.instanceAdmin
 
+sleep 5
 
 gcloud compute instances create lab-3 \
-    --zone $ZONE_2 \
+    --zone $ZONE2 \
     --machine-type=e2-standard-2 \
     --service-account $SA \
     --scopes "https://www.googleapis.com/auth/compute"
 
 EOF
+
+sleep 10
 
 gcloud compute ssh centos-clean \
     --zone=$ZONE \
