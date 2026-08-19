@@ -25,7 +25,7 @@ echo "----------------------------------------------------------------------"
 gcloud compute instances create lab-1 --zone $ZONE --machine-type=e2-standard-2
 
 export NEW_ZONE=$(gcloud compute zones list \
-    --filter="region:($REGION) AND name:!($ZONE)" \
+    --filter="region:($REGION) AND name!=$ZONE" \
     --format="value(name)" | shuf -n 1)
 gcloud config set compute/zone $NEW_ZONE
 
