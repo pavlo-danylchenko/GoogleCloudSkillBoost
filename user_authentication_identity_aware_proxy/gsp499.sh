@@ -63,12 +63,6 @@ gcloud iap web add-iam-policy-binding \
     --resource-type="cloud-run" \
     --service="user-auth-lab"
 
-# gcloud run services add-iam-policy-binding user-auth-lab \
-#     --region="$REGION" \
-#     --member="user:${STUDENT_EMAIL}" \
-#     --role="roles/run.invoker"
-
-# read -p "Check the TASK #2 Progress and hit ANY KEY..."
 
 echo "======================================================================"
 echo "               Task 2. Access user identity information"
@@ -114,7 +108,7 @@ curl -X GET $SERVICE_URL -H "X-Goog-Authenticated-User-Email: totally fake email
 
 sleep 10
 
-read -p "Check the TASK #2 Progress and hit ANY KEY..."
+read -p "\nCheck the TASK #2 Progress and hit ANY KEY... (Enable and desable IAP manually if the task has not been passed)"
 
 echo "======================================================================"
 echo "               Task 3. Use cryptographic verification"
@@ -144,10 +138,24 @@ gcloud run services update user-auth-lab \
     --region=$REGION \
     --iap
 
-gcloud run services add-iam-policy-binding user-auth-lab \
-    --member="serviceAccount:service-$(gcloud projects describe $DEVSHELL_PROJECT_ID --format='value(projectNumber)')@gcp-sa-iap.iam.gserviceaccount.com" \
-    --role="roles/run.invoker" \
-    --region=$REGION
+# gcloud run services add-iam-policy-binding user-auth-lab \
+#     --member="serviceAccount:service-$(gcloud projects describe $DEVSHELL_PROJECT_ID --format='value(projectNumber)')@gcp-sa-iap.iam.gserviceaccount.com" \
+#     --role="roles/run.invoker" \
+#     --region=$REGION
+
+# gcloud iap web add-iam-policy-binding \
+#     --member="user:${STUDENT_EMAIL}" \
+#     --role="roles/iap.httpsResourceAccessor" \
+#     --region="$REGION" \
+#     --resource-type="cloud-run" \
+#     --service="user-auth-lab"
+
+# gcloud iap web add-iam-policy-binding \
+#     --member="serviceAccount:service-$(gcloud projects describe $DEVSHELL_PROJECT_ID --format='value(projectNumber)')@gcp-sa-iap.iam.gserviceaccount.com" \
+#     --role="roles/iap.httpsResourceAccessor" \
+#     --region="$REGION" \
+#     --resource-type="cloud-run" \
+#     --service="user-auth-lab"
 
 echo "SERVICE_URL = $SERVICE_URL"
 
