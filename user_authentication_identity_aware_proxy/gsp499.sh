@@ -94,8 +94,9 @@ echo "                         Turn off IAP"
 echo "----------------------------------------------------------------------"
 gcloud run services update user-auth-lab \
     --region=$REGION \
-    --allow-unauthenticated \
-    --no-iap
+    --no-iap \
+    --ingress=all \
+    --no-invoker-iam-check
 
 curl -X GET $SERVICE_URL -H "X-Goog-Authenticated-User-Email: totally fake email"
 
@@ -104,17 +105,16 @@ gcloud run services add-iam-policy-binding user-auth-lab \
     --member="allUsers" \
     --role="roles/run.invoker"
 
-# OR 
-# gcloud iap web add-iam-policy-binding \
-#     --member="user:${STUDENT_EMAIL}" \
-#     --role="roles/iap.httpsResourceAccessor" \
-#     --region="$REGION" \
-#     --resource-type="cloud-run" \
-#     --service="user-auth-lab"
+gcloud iap web add-iam-policy-binding \
+    --member="allUsers" \
+    --role="roles/iap.httpsResourceAccessor" \
+    --region="$REGION" \
+    --resource-type="cloud-run" \
+    --service="user-auth-lab"
 
 sleep 10
 
-# read -p "Check the TASK #2 Progress and hit ANY KEY..."
+read -p "Check the TASK #2 Progress and hit ANY KEY..."
 
 echo "======================================================================"
 echo "               Task 3. Use cryptographic verification"
