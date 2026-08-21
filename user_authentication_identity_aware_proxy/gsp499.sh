@@ -100,17 +100,17 @@ gcloud run services update user-auth-lab \
 
 curl -X GET $SERVICE_URL -H "X-Goog-Authenticated-User-Email: totally fake email"
 
-gcloud run services add-iam-policy-binding user-auth-lab \
-    --region="$REGION" \
-    --member="allUsers" \
-    --role="roles/run.invoker"
+# gcloud run services add-iam-policy-binding user-auth-lab \
+#     --region="$REGION" \
+#     --member="allUsers" \
+#     --role="roles/run.invoker"
 
-gcloud iap web add-iam-policy-binding \
-    --member="allUsers" \
-    --role="roles/iap.httpsResourceAccessor" \
-    --region="$REGION" \
-    --resource-type="cloud-run" \
-    --service="user-auth-lab"
+# gcloud iap web add-iam-policy-binding \
+#     --member="allUsers" \
+#     --role="roles/iap.httpsResourceAccessor" \
+#     --region="$REGION" \
+#     --resource-type="cloud-run" \
+#     --service="user-auth-lab"
 
 sleep 10
 
