@@ -85,7 +85,7 @@ gcloud pam entitlements create pam-entitlement \
     --location=global \
     --project=$DEVSHELL_PROJECT_ID
 
-read "CHECK the TASK #2 and PRESS ANY KEY..."
+# read -p "CHECK the TASK #2 and PRESS ANY KEY..."
 
 echo "======================================================================"
 echo "                   Task 3. Update the entitlement"
@@ -128,7 +128,7 @@ gcloud pam entitlements update pam-entitlement \
     --project=$DEVSHELL_PROJECT_ID \
     --quiet
 
-read "CHECK the TASK #3 and PRESS ANY KEY..."
+# read -p "CHECK the TASK #3 and PRESS ANY KEY..."
 
 
 echo "======================================================================"
@@ -168,7 +168,7 @@ gcloud pam grants approve $GRANT_ID \
     --location=global \
     --project=$DEVSHELL_PROJECT_ID
 
-read "CHECK the TASK #4 and PRESS ANY KEY..."
+# read -p "CHECK the TASK #4 and PRESS ANY KEY..."
 
 
 echo "======================================================================"
@@ -180,7 +180,7 @@ gcloud pam grants revoke $GRANT_ID \
     --location=global \
     --project=$DEVSHELL_PROJECT_ID
 
-read "CHECK the TASK #5 and PRESS ANY KEY..."
+# read -p "CHECK the TASK #5 and PRESS ANY KEY..."
 
 
 echo "======================================================================"
