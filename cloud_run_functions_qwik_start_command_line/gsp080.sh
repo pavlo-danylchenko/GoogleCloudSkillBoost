@@ -5,7 +5,6 @@ echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
-export PROJECT_ID=$(gcloud config get-value project)
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -61,15 +60,15 @@ echo "======================================================================"
 echo "                    Task 2. Deploy your function"
 echo "======================================================================"
 
-gcloud functions deploy nodejs-pubsub-function \
+printf 'n\n' | gcloud functions deploy nodejs-pubsub-function \
   --gen2 \
   --runtime=nodejs22 \
   --region=$REGION \
   --source=. \
   --entry-point=helloPubSub \
   --trigger-topic cf-demo \
-  --stage-bucket $PROJECT_ID-bucket \
-  --service-account cloudfunctionsa@$PROJECT_ID.iam.gserviceaccount.com \
+  --stage-bucket $DEVSHELL_PROJECT_ID-bucket \
+  --service-account cloudfunctionsa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
   --allow-unauthenticated
 
 gcloud functions describe nodejs-pubsub-function \
