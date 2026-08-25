@@ -24,11 +24,11 @@ echo "======================================================================"
 gcloud network-connectivity hubs create ncc-hub
 
 OFFICE1_TUNNELS=$(gcloud compute vpn-tunnels list \
-    --filter="name~'^onprem-office1-to-routing-tunnel-'" \
+    --filter="name~'office1'" \
     --format="value(name)" | paste -sd, -)
 
 OFFICE2_TUNNELS=$(gcloud compute vpn-tunnels list \
-    --filter="name~'^onprem-office2-to-routing-tunnel-'" \
+    --filter="name~'office2'" \
     --format="value(name)" | paste -sd, -)
 
 gcloud network-connectivity spokes linked-vpn-tunnels create office-1-spoke \
