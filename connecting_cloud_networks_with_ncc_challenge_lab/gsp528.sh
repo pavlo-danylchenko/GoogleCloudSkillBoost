@@ -23,6 +23,7 @@ echo "                Task 1. Connect 2 On-prem VPCs with NCC"
 echo "======================================================================"
 gcloud network-connectivity hubs create ncc-hub
 
+# --filter="name~'^onprem-office1-to-routing-tunnel-'"
 OFFICE1_TUNNELS=$(gcloud compute vpn-tunnels list \
     --filter="name~'office1'" \
     --format="value(name)" | paste -sd, -)
