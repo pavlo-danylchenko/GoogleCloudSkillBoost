@@ -31,6 +31,11 @@ gcloud config set run/region $REGION
 PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
     --format="value(projectNumber)")
 
+read -p "ENTER the BUCKET NAME: " BUCKET_NAME
+read -p "ENTER the TOPIC NAME: " TOPIC_NAME
+# read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
+export CRF_NAME="memories-thumbnail-maker"
+
 # Three ways to GET STORAGE SA
 # STORAGE_SA="service-$PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com"
 # STORAGE_SA=$(gsutil kms serviceaccount -p $DEVSHELL_PROJECT_ID)
@@ -62,15 +67,11 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$COMPUTE_SA" \
     --role="roles/eventarc.eventReceiver"
 
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-    --member="serviceAccount:$PUBSUB_SA" \
-    --role="roles/iam.serviceAccountTokenCreator"
+# gcloud projects add-iam-policy-binding "$DEVSHELL_PROJECT_ID" \
+#     --member="serviceAccount:$PUBSUB_SA" \
+#     --role="roles/iam.serviceAccountTokenCreator"
 
 sleep 5
-
-read -p "ENTER the BUCKET NAME: " BUCKET_NAME
-read -p "ENTER the TOPIC NAME: " TOPIC_NAME
-read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
 
 
 echo "======================================================================"
