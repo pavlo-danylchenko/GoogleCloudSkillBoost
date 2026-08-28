@@ -52,6 +52,7 @@ echo "======================================================================"
 echo "                Task 5. Download the prometheus binary"
 echo "======================================================================"
 git clone https://github.com/GoogleCloudPlatform/prometheus && cd prometheus
+PROMETHEUS_DIR=$(pwd)
 git checkout v2.28.1-gmp.4
 wget https://storage.googleapis.com/kochasoft/gsp1026/prometheus
 chmod a+x prometheus
@@ -66,7 +67,6 @@ echo "======================================================================"
   --export.label.location=$ZONE \
   > /tmp/prometheus.log 2>&1 &
 
-PROMETHEUS_DIR=$(pwd)
 PROMETHEUS_PID=$!
 echo "Prometheus started with PID $PROMETHEUS_PID"
 
@@ -74,6 +74,7 @@ echo "Prometheus started with PID $PROMETHEUS_PID"
 echo "======================================================================"
 echo "              Task 7. Download and run the node exporter"
 echo "======================================================================"
+cd ~/
 wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
 tar xvfz node_exporter-1.3.1.linux-amd64.tar.gz
 cd node_exporter-1.3.1.linux-amd64
@@ -87,6 +88,7 @@ echo "                     Create a config.yaml file"
 echo "----------------------------------------------------------------------"
 kill "$PROMETHEUS_PID"
 wait "$PROMETHEUS_PID" 2>/dev/null || true
+cd "$PROMETHEUS_DIR"
 
 cat > config.yaml << EOF
 global:
@@ -98,15 +100,15 @@ scrape_configs:
       - targets: ['localhost:9100']
 EOF
 
-gcloud storage buckets create -p $DEVSHELL_PROJECT_ID gs://$DEVSHELL_PROJECT_ID
+gcloud storage buckets create gs://$DEVSHELL_PROJECT_ID
 gcloud storage cp config.yaml gs://$DEVSHELL_PROJECT_ID
 gsutil -m acl set -R -a public-read gs://$DEVSHELL_PROJECT_ID
 
-cd "$PROMETHEUS_DIR"
+
 ./prometheus \
     --config.file=config.yaml \
     --export.label.project-id=$DEVSHELL_PROJECT_ID \
-    --export.label.location=$ZONE
+    --export.label.location=$ZONE &
 
 
 echo "======================================================================"
