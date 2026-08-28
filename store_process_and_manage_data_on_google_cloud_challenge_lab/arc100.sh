@@ -12,10 +12,27 @@ echo "======================================================================"
 # gcloud services list --filter="name=eventarc.googleapis.com"
 # gcloud services list --filter="name=cloudfunctions.googleapis.com"
 
-gcloud services enable \
-    run.googleapis.com \
+# gcloud services enable \
+#     run.googleapis.com \
+#     eventarc.googleapis.com \
+#     cloudfunctions.googleapis.com
+
+for SERVICE in \
     eventarc.googleapis.com \
-    cloudfunctions.googleapis.com
+    pubsub.googleapis.com \
+    cloudfunctions.googleapis.com \
+    cloudbuild.googleapis.com \
+    run.googleapis.com
+do
+    echo "Enabling SERVICE: $SERVICE"
+    gcloud services enable SERVICE
+    
+    echo "Creating service identity: $SERVICE"
+    gcloud beta services identity create \
+        --service=$SERVICE \
+        --project=$DEVSHELL_PROJECT_ID \
+        --quiet
+done
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -31,9 +48,11 @@ gcloud config set run/region $REGION
 PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
     --format="value(projectNumber)")
 
-read -p "ENTER the BUCKET NAME: " BUCKET_NAME
-read -p "ENTER the TOPIC NAME: " TOPIC_NAME
+# read -p "ENTER the BUCKET NAME: " BUCKET_NAME
 # read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
+read -p "ENTER the TOPIC NAME: " TOPIC_NAME
+
+export BUCKET_NAME="memories-bucket-$DEVSHELL_PROJECT_ID"
 export CRF_NAME="memories-thumbnail-maker"
 
 # Three ways to GET STORAGE SA
@@ -52,6 +71,11 @@ echo "PUBSUB_SA: $PUBSUB_SA"
 echo "STORAGE_SA: $STORAGE_SA"
 echo "COMPUTE_SA: $COMPUTE_SA"
 
+# Grant Compute Engine default service account Event Receiver role
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+    --member="serviceAccount:$COMPUTE_SA" \
+    --role="roles/eventarc.eventReceiver"
+
 # Grant Storage Service Account Publisher role
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$STORAGE_SA" \
@@ -62,14 +86,9 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$EVENTARC_SA" \
     --role="roles/eventarc.serviceAgent"
 
-# Grant Compute Engine default service account Event Receiver role
-gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
-    --member="serviceAccount:$COMPUTE_SA" \
-    --role="roles/eventarc.eventReceiver"
-
-# gcloud projects add-iam-policy-binding "$DEVSHELL_PROJECT_ID" \
-#     --member="serviceAccount:$PUBSUB_SA" \
-#     --role="roles/iam.serviceAccountTokenCreator"
+gcloud projects add-iam-policy-binding "$DEVSHELL_PROJECT_ID" \
+    --member="serviceAccount:$PUBSUB_SA" \
+    --role="roles/iam.serviceAccountTokenCreator"
 
 sleep 5
 
