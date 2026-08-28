@@ -25,7 +25,7 @@ for SERVICE in \
     run.googleapis.com
 do
     echo "Enabling SERVICE: $SERVICE"
-    gcloud services enable SERVICE
+    gcloud services enable $SERVICE
     
     echo "Creating service identity: $SERVICE"
     gcloud beta services identity create \
@@ -48,13 +48,6 @@ gcloud config set run/region $REGION
 PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
     --format="value(projectNumber)")
 
-# read -p "ENTER the BUCKET NAME: " BUCKET_NAME
-# read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
-read -p "ENTER the TOPIC NAME: " TOPIC_NAME
-
-export BUCKET_NAME="memories-bucket-$DEVSHELL_PROJECT_ID"
-export CRF_NAME="memories-thumbnail-maker"
-
 # Three ways to GET STORAGE SA
 # STORAGE_SA="service-$PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com"
 # STORAGE_SA=$(gsutil kms serviceaccount -p $DEVSHELL_PROJECT_ID)
@@ -63,6 +56,7 @@ export CRF_NAME="memories-thumbnail-maker"
 STORAGE_SA="service-$PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com"
 EVENTARC_SA="service-$PROJECT_NUMBER@gcp-sa-eventarc.iam.gserviceaccount.com"
 PUBSUB_SA="service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com"
+# PUBSUB_SA=$(gcloud storage service-agent --project=$DEVSHELL_PROJECT_ID)
 COMPUTE_SA="$PROJECT_NUMBER-compute@developer.gserviceaccount.com"
 
 echo "PROJECT_NUMBER: $PROJECT_NUMBER"
@@ -90,7 +84,14 @@ gcloud projects add-iam-policy-binding "$DEVSHELL_PROJECT_ID" \
     --member="serviceAccount:$PUBSUB_SA" \
     --role="roles/iam.serviceAccountTokenCreator"
 
-sleep 5
+sleep 15
+
+# read -p "ENTER the BUCKET NAME: " BUCKET_NAME
+read -p "ENTER the TOPIC NAME: " TOPIC_NAME
+read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
+
+export BUCKET_NAME="memories-bucket-$DEVSHELL_PROJECT_ID"
+# export CRF_NAME="memories-thumbnail-maker"
 
 
 echo "======================================================================"
