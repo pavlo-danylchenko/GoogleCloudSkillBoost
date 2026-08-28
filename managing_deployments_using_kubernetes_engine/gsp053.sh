@@ -55,6 +55,7 @@ curl "http://$(kubectl get svc fortune-app -o=jsonpath='{.status.loadBalancer.in
 # kubectl scale deployment fortune-app-blue --replicas=3
 # kubectl get pods | grep fortune-app-blue | wc -l
 
+read -p "Check the TASK #2 status and press ANY KEY to proceed to the next task..."
 
 echo "======================================================================"
 echo "                      Task 3. Rolling update"
@@ -101,7 +102,7 @@ kubectl create -f deployments/fortune-app-canary.yaml
 for i in {1..10}; do curl -s http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true; echo;
 done
 
-read -p "Check the Task status and press Enter to proceed to the next task #5 ..."
+read -p "Check the TASK #4 status and press ANY KEY to proceed to the next task..."
 
 
 echo "======================================================================"
