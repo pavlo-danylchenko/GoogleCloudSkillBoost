@@ -205,9 +205,9 @@ gcloud functions deploy $CRF_NAME \
   --region=$REGION \
   --source=. \
   --entry-point=$CRF_NAME \
-  --trigger-bucket=$BUCKET_NAME \
-  --trigger-location=$REGION
-#   --allow-unauthenticated
+  --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
+  --trigger-event-filters="bucket=$BUCKET_NAME"
+
 
 echo "======================================================================"
 echo "                    Task 4. Test the Infrastructure"
