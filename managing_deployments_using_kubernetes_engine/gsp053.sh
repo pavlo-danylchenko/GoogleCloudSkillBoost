@@ -64,33 +64,33 @@ echo "======================================================================"
 echo "----------------------------------------------------------------------"
 echo "                      Trigger a rolling update"
 echo "----------------------------------------------------------------------"
-kubectl set image deployment/fortune-app-blue \
-    fortune-app=$REGION-docker.pkg.dev/qwiklabs-resources/spl-lab-apps/fortune-service:2.0.0
+# kubectl set image deployment/fortune-app-blue \
+#     fortune-app=$REGION-docker.pkg.dev/qwiklabs-resources/spl-lab-apps/fortune-service:2.0.0
 
-kubectl set env deployment/fortune-app-blue APP_VERSION=2.0.0
+# kubectl set env deployment/fortune-app-blue APP_VERSION=2.0.0
 
 # kubectl get replicaset
-kubectl rollout history deployment/fortune-app-blue
+# kubectl rollout history deployment/fortune-app-blue
 
 
 echo "----------------------------------------------------------------------"
 echo "                      Pause a rolling update"
 echo "----------------------------------------------------------------------"
-kubectl rollout pause deployment/fortune-app-blue
-kubectl rollout status deployment/fortune-app-blue
+# kubectl rollout pause deployment/fortune-app-blue
+# kubectl rollout status deployment/fortune-app-blue
 
 
 echo "----------------------------------------------------------------------"
 echo "                      Resume a rolling update"
 echo "----------------------------------------------------------------------"
-kubectl rollout resume deployment/fortune-app-blue
-kubectl rollout status deployment/fortune-app-blue
+# kubectl rollout resume deployment/fortune-app-blue
+# kubectl rollout status deployment/fortune-app-blue
 
 
 echo "----------------------------------------------------------------------"
 echo "                      Roll back an update"
 echo "----------------------------------------------------------------------"
-kubectl rollout undo deployment/fortune-app-blue
+# kubectl rollout undo deployment/fortune-app-blue
 # curl http://`kubectl get svc fortune-app -o=jsonpath="{.status.loadBalancer.ingress[0].ip}"`/version || true
 
 
