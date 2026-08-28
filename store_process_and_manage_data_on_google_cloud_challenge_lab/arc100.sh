@@ -84,7 +84,7 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$PUBSUB_SA" \
     --role="roles/iam.serviceAccountTokenCreator"
 
-sleep 20
+sleep 25
 
 # read -p "ENTER the BUCKET NAME: " BUCKET_NAME
 read -p "ENTER the TOPIC NAME: " TOPIC_NAME
