@@ -80,7 +80,7 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$EVENTARC_SA" \
     --role="roles/eventarc.serviceAgent"
 
-gcloud projects add-iam-policy-binding "$DEVSHELL_PROJECT_ID" \
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
     --member="serviceAccount:$PUBSUB_SA" \
     --role="roles/iam.serviceAccountTokenCreator"
 
@@ -205,16 +205,17 @@ gcloud functions deploy $CRF_NAME \
   --region=$REGION \
   --source=. \
   --entry-point=$CRF_NAME \
-  --trigger-event-filters="type=google.cloud.storage.object.v1.finalized" \
-  --trigger-event-filters="bucket=$BUCKET_NAME"
+  --trigger-bucket=$BUCKET_NAME \
+  --trigger-location=$REGION
 
 
 echo "======================================================================"
 echo "                    Task 4. Test the Infrastructure"
 echo "======================================================================"
-curl https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/800px-Ada_Lovelace_portrait.jpg --output ada.jpg
-gcloud storage cp ada.jpg gs://$BUCKET_NAME
-rm ada.jpg
+# curl https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/800px-Ada_Lovelace_portrait.jpg --output ada.jpg
+curl https://storage.googleapis.com/cloud-training/arc101/travel.jpg --output travel.jpg
+gcloud storage cp travel.jpg gs://$BUCKET_NAME
+rm travel.jpg
 
  
 echo "======================================================================"
