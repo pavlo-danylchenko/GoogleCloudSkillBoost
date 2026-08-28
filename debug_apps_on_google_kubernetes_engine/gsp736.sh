@@ -28,7 +28,7 @@ cd microservices-demo
 gcloud container clusters get-credentials central --zone $ZONE
 kubectl apply -f release/kubernetes-manifests.yaml
 
-sleep 10
+sleep 5
 
 # kubectl get nodes
 
@@ -43,7 +43,7 @@ gcloud logging metrics create Error_Rate_SLI \
   --description="Error rate for recommendationservice" \
   --log-filter="resource.type=\"k8s_container\" severity=ERROR labels.\"k8s-pod/app\": \"recommendationservice\""
 
-sleep 10
+sleep 5
 
 cat > policy-config.json << EOF
 {
