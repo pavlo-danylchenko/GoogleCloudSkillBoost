@@ -5,7 +5,7 @@ echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
-export PROJECT_ID=$(gcloud config get-value project)
+# export PROJECT_ID=$(gcloud config get-value project)
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -16,14 +16,13 @@ export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 echo "======================================================================"
 echo "                    Task 1. Create an API key"
 echo "======================================================================"
-export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value core/project)
 gcloud iam service-accounts create my-natlang-sa \
     --display-name "my natural language service account"
 
 sleep 5
 
 gcloud iam service-accounts keys create ~/key.json \
-    --iam-account my-natlang-sa@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+    --iam-account my-natlang-sa@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
 
 sleep 5
 
@@ -43,7 +42,7 @@ echo "======================================================================"
 
 gcloud compute ssh linux-instance \
     --quiet \
-    --project=$GOOGLE_CLOUD_PROJECT \
+    --project=$DEVSHELL_PROJECT_ID \
     --zone=$ZONE \
     --command="gcloud ml language analyze-entities --content=\"Michelangelo Caravaggio, Italian painter, is known for 'The Calling of Saint Matthew'.\" > result.json"
 
