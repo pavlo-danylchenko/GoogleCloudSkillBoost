@@ -97,7 +97,7 @@ gcloud logging metrics create pod-image-errors \
   --description="pod-image-errors" \
   --log-filter='resource.type="k8s_pod" severity="WARNING"'
 
-sleep 5
+sleep 10
 
 echo "----------------------------------------------------------------------"
 echo "                     Create an alerting policy"
