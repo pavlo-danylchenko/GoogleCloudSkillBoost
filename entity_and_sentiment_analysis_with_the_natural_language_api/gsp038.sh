@@ -19,7 +19,8 @@ echo "======================================================================"
 echo "                        Task 1. Create an API key"
 echo "======================================================================"
 gcloud alpha services api-keys create \
-    --display-name="APIkey"
+    --display-name="APIkey" \
+    --api-target=service=language.googleapis.com
 
 KEY_NAME=$(gcloud alpha services api-keys list --filter="display_name=APIkey" --format="value(name)")
 API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
