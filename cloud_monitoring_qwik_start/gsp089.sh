@@ -39,6 +39,8 @@ gcloud compute firewall-rules create default-allow-http \
     --source-ranges=0.0.0.0/0 \
     --target-tags=http-server
 
+sleep 10
+
 echo "======================================================================"
 echo "           Task 2. Add Apache2 HTTP Server to your instance"
 echo "======================================================================"
@@ -50,6 +52,7 @@ EOF
 
 gcloud compute ssh lamp-1-vm \
     --zone=$ZONE \
+    --tunnel-through-iap \
     --quiet \
     --project=$DEVSHELL_PROJECT_ID \
     --command="bash -s" < ./setup.sh
@@ -84,12 +87,23 @@ gcloud compute ssh lamp-1-vm \
 echo "======================================================================"
 echo "                     Task 3. Create an uptime check"
 echo "======================================================================"
-    
-INSTANCE_CP=$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --project=$DEVSHELL_PROJECT_ID --format='json' | jq -r '.id')
+# INSTANCE_CP=$(gcloud compute instances describe lamp-1-vm --zone=$ZONE --project=$DEVSHELL_PROJECT_ID --format='json' | jq -r '.id')
+
+EXTERNAL_IP=$(gcloud compute instances describe lamp-1-vm \
+    --zone="$ZONE" \
+    --project="$DEVSHELL_PROJECT_ID" \
+    --format="value(networkInterfaces[0].accessConfigs[0].natIP)")
+
+echo "$EXTERNAL_IP"
 
 gcloud monitoring uptime create "Lamp Uptime Check" \
-    --resource-type="gce-instance" \
-    --resource-labels=project_id=$DEVSHELL_PROJECT_ID,instance_id=$INSTANCE_CP,zone=$ZONE
+    --resource-type=uptime-url \
+    --resource-labels="host=$EXTERNAL_IP,project_id=$DEVSHELL_PROJECT_ID" \
+    --protocol=http \
+    --path="/" \
+    --port=80 \
+    --period=1 \
+    --project="$DEVSHELL_PROJECT_ID"
 
 
 echo "======================================================================"
