@@ -98,7 +98,7 @@ echo "Sending the script to the VM instance ..."
 gcloud compute ssh linux-instance \
     --zone=$ZONE \
     --quiet \
-    --project=$PROJECT_ID \
+    --project=$DEVSHELL_PROJECT_ID \
     --command="bash -s" < ./start.sh
 
 
