@@ -20,11 +20,23 @@ gcloud config set compute/region $REGION
 # read -p "ENTER the NAMESPACE NAME: " NAMESPACE_NAME
 # read -p "ENTER the REPO NAME: " REPO_NAME
 # read -p "ENTER the SERVICE NAME: " SERVICE_NAME
+
+echo "======================================================================"
+echo "Do not forget to EXPORT other ENV VARIABLES from the LAB SETUP SECTION"
+echo "======================================================================"
+
 read -p "ENTER the INTERVAL: " INTERVAL
+
+gcloud artifacts repositories create $REPO_NAME \
+    --repository-format=docker \
+    --location=$REGION \
+    --project=$DEVSHELL_PROJECT_ID
 
 echo "======================================================================"
 echo "                    Task 1. Create a GKE cluster"
 echo "======================================================================"
+sleep 20
+
 gcloud container clusters create $CLUSTER_NAME\
     --release-channel=regular \
     --enable-autoscaling \
@@ -159,7 +171,7 @@ kubectl set image deployment/helloweb \
     hello-app=$REGION-docker.pkg.dev/$DEVSHELL_PROJECT_ID/$REPO_NAME/hello-app:v2
   
 kubectl expose deployment helloweb \
-    -n $NAMESPACE \
+    -n $NAMESPACE_NAME \
     --name=$SERVICE_NAME \
     --type=LoadBalancer \
     --port 8080 \
