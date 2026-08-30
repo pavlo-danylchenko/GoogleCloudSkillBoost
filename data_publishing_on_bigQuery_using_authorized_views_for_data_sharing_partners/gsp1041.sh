@@ -50,8 +50,6 @@ bq mk \
 echo "======================================================================"
 echo "         Task 2. Assign IAM permissions to both the views"
 echo "======================================================================"
-PROJECT_ID=$(gcloud config get-value project)
-
 bq show --format=prettyjson \
     "$DEVSHELL_PROJECT_ID:demo_dataset" > dataset.json
 
@@ -81,15 +79,40 @@ bq update \
 echo "======================================================================"
 echo "     Task 3. Grant permissions to the users to access the views"
 echo "======================================================================"
-bq add-iam-policy-binding \
-    "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a" \
-    --member="user:$CUSTOMER_A" \
-    --role="roles/bigquery.dataViewer"
+jq --arg member "user:$CUSTOMER_A" '
+  .bindings = (
+    .bindings // []
+  ) + [{
+    "role": "roles/bigquery.dataViewer",
+    "members": [$member]
+  }]
+' view-a-policy.json > view-a-policy-updated.json
 
-bq add-iam-policy-binding \
+bq set-iam-policy \
+    "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a" \
+    view-a-policy-updated.json
+
+# bq get-iam-policy \
+#     --format=prettyjson \
+#     "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a"
+
+bq get-iam-policy \
+    --format=json \
     "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_b" \
-    --member="user:$CUSTOMER_B" \
-    --role="roles/bigquery.dataViewer"
+    > view-b-policy.json
+
+jq --arg member "user:$CUSTOMER_B" '
+  .bindings = (.bindings // []) + [
+    {
+      "role": "roles/bigquery.dataViewer",
+      "members": [$member]
+    }
+  ]
+' view-b-policy.json > view-b-policy-updated.json
+
+bq set-iam-policy \
+    "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_b" \
+    view-b-policy-updated.json
 
 
 echo "======================================================================"
@@ -130,6 +153,7 @@ bq query \
     "
 
 # bq query \
+#     --project=$PROJECT_A \
 #     --use_legacy_sql=false \
 #     "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\`"
 
@@ -168,8 +192,9 @@ bq query \
     "
 
 # bq query \
+#     --project=$PROJECT_B \
 #     --use_legacy_sql=false \
-#     "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\`"
+#     "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_a\`"
 
 
 echo "======================================================================"
