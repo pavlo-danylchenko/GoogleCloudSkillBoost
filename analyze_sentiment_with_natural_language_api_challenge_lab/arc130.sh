@@ -22,7 +22,8 @@ echo "                        Task 1. Create an API key"
 echo "======================================================================"
 gcloud services api-keys create \
     --display-name="APIkey" \
-    --api-target=service=language.googleapis.com
+    --api-target=service=language.googleapis.com \
+    --api-target=service=speech.googleapis.com
 
 KEY_NAME=$(gcloud alpha services api-keys list --filter="display_name=APIkey" --format="value(name)")
 API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
@@ -72,7 +73,7 @@ cat > multi-nl-request.json << EOF_02
 EOF_02
 
 echo "Analyzing text content..."
-curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
+curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
   -s -X POST -H "Content-Type: application/json" --data-binary @multi-nl-request.json > multi-response.txt
 
 echo "The analysis is complete. The results has been saved to multi-response.txt"
