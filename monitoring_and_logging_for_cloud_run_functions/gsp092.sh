@@ -15,48 +15,57 @@ echo $REGION
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
-# gcloud services enable \
-#     run.googleapis.com \
-#     cloudbuild.googleapis.com \
-#     artifactregistry.googleapis.com
+gcloud services enable \
+    run.googleapis.com \
+    cloudbuild.googleapis.com \
+    artifactregistry.googleapis.com
 
-# mkdir helloworld && cd helloworld
+sleep 10
+
+mkdir helloworld && cd helloworld
 
 #  UI
-# cat > index.js << EOF
-# const functions = require('@google-cloud/functions-framework');
+cat > index.js << EOF
+import { http } from '@google-cloud/functions-framework';
 
-# functions.http('helloHttp', (req, res) => {
-#   res.set('Content-Type', 'text/plain');
-#   res.send(`Hello ${req.query.name || req.body.name || 'World'}!`);
-# });
-# EOF
+http('helloHttp', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send(`Hello ${req.query.name || req.body.name || 'World'}!`);
+});
+EOF
 
-# cat > package.json << EOF
-# {
-#   "dependencies": {
-#     "@google-cloud/functions-framework": "^3.0.0"
-#   }
-# }
-# EOF
+cat > package.json << EOF
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0"
+  },
+  "type": "module"
+}
+EOF
 
-# gcloud run deploy helloworld \
-#     --source=. \
-#     --region=$REGION \
-#     --allow-unauthenticated \
-#     --execution-environment=gen2 \
-#     --max-instances=5
+gcloud functions deploy helloworld \
+  --gen2 \
+  --runtime=nodejs22 \
+  --trigger-http \
+  --region=$REGION \
+  --source=. \
+  --entry-point=helloHttp\
+  --max-instances 5 \
+  --allow-unauthenticated \
+  --quiet
 
-# gcloud functions deploy $CSF_NAME \
-#   --gen2 \
-#   --runtime nodejs24 \
-#   --entry-point $CSF_NAME \
-#   --source . \
-#   --region $REGION \
-#   --trigger-bucket $DEVSHELL_PROJECT_ID \
-#   --trigger-location $REGION \
-#   --max-instances 2 \
-#   --quiet
+sleep 10
+
+gcloud functions deploy helloworld \
+  --gen2 \
+  --runtime=nodejs22 \
+  --trigger-http \
+  --region=$REGION \
+  --source=. \
+  --entry-point=helloHttp\
+  --max-instances 5 \
+  --allow-unauthenticated \
+  --quiet
 
 curl -LO 'https://github.com/tsenart/vegeta/releases/download/v12.12.0/vegeta_12.12.0_linux_386.tar.gz'
 tar -xvzf vegeta_12.12.0_linux_386.tar.gz
