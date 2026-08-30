@@ -161,7 +161,7 @@ bq mk \
         FROM \`${PROJECT_B}.customer_b_dataset.customer_info\` AS cust
         JOIN \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\` AS geos
         ON geos.zip_code = cust.postal_code;" \
-    "${PROJECT_A}:customer_a_dataset.customer_a_table"
+    "${PROJECT_B}:customer_a_dataset.customer_b_table"
 
 
 echo "======================================================================"
