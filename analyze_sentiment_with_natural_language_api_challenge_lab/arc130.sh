@@ -21,7 +21,7 @@ echo "======================================================================"
 echo "                        Task 1. Create an API key"
 echo "======================================================================"
 gcloud services api-keys create \
-    --display-name="APIkey" \
+    --display-name="API key 1" \
     --api-target=service=language.googleapis.com \
     --api-target=service=speech.googleapis.com
 
