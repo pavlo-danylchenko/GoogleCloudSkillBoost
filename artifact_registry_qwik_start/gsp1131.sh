@@ -15,6 +15,7 @@ echo $REGION
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
+sleep 10
 
 echo "======================================================================"
 echo "                Task 1. Create a Docker repository"
