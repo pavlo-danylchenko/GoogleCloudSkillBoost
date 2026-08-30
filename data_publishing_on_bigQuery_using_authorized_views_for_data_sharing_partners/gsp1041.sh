@@ -82,6 +82,11 @@ bq update \
 echo "======================================================================"
 echo "     Task 3. Grant permissions to the users to access the views"
 echo "======================================================================"
+bq get-iam-policy \
+    --format=json \
+    "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a" \
+    > view-a-policy.json
+
 jq --arg member "user:$CUSTOMER_A" '
   .bindings = (
     .bindings // []
@@ -94,10 +99,6 @@ jq --arg member "user:$CUSTOMER_A" '
 bq set-iam-policy \
     "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a" \
     view-a-policy-updated.json
-
-# bq get-iam-policy \
-#     --format=prettyjson \
-#     "$DEVSHELL_PROJECT_ID:demo_dataset.authorized_view_a"
 
 bq get-iam-policy \
     --format=json \
@@ -132,9 +133,10 @@ gcloud auth login $CUSTOMER_A \
 gcloud config set account $CUSTOMER_A
 
 bq query \
-    --project=$PROJECT_A \
+    --project_id=$PROJECT_A \
     --use_legacy_sql=false \
-    "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_a\`"
+    "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_a\`" \
+    > /dev/null
 
 bq mk \
     --use_legacy_sql=false \
@@ -142,7 +144,7 @@ bq mk \
   "${PROJECT_A}:customer_a_dataset.customer_a_table"
 
 bq query \
-    --project=$PROJECT_A \
+    --project_id=$PROJECT_A \
     --use_legacy_sql=false \
     "
     SELECT
@@ -153,10 +155,11 @@ bq query \
     FROM \`${PROJECT_A}.customer_a_dataset.customer_info\` AS cust
     JOIN \`${PARTNER_PROJECT}.demo_dataset.authorized_view_a\` AS geos
     ON geos.zip_code = cust.postal_code
-    "
+    " \
+    > /dev/null
 
 # bq query \
-#     --project=$PROJECT_A \
+#     --project_id=$PROJECT_A \
 #     --use_legacy_sql=false \
 #     "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\`"
 
@@ -171,9 +174,10 @@ gcloud auth login $CUSTOMER_B \
 gcloud config set account $CUSTOMER_B
 
 bq query \
-    --project=$PROJECT_B \
+    --project_id=$PROJECT_B \
     --use_legacy_sql=false \
-    "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\`"
+    "SELECT * FROM \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\`" \
+    > /dev/null
 
 bq mk \
     --use_legacy_sql=false \
@@ -181,7 +185,7 @@ bq mk \
   "${PROJECT_B}:customer_b_dataset.customer_b_table"
 
 bq query \
-    --project=$PROJECT_B \
+    --project_id=$PROJECT_B \
     --use_legacy_sql=false \
     "
     SELECT
@@ -192,7 +196,8 @@ bq query \
     FROM \`${PROJECT_B}.customer_b_dataset.customer_info\` AS cust
     JOIN \`${PARTNER_PROJECT}.demo_dataset.authorized_view_b\` AS geos
     ON geos.zip_code = cust.postal_code
-    "
+    " \
+    > /dev/null
 
 # bq query \
 #     --project=$PROJECT_B \
