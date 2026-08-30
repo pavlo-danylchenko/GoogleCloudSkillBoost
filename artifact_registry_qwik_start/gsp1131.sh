@@ -7,10 +7,10 @@ echo "======================================================================"
 
 export ZONE=$(gcloud compute project-info describe \
 --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
 echo $ZONE
-
-export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+echo $REGION
 
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
