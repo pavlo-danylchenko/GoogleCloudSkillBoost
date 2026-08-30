@@ -16,12 +16,15 @@ echo $REGION
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
-read -p "ENTER the PARTNER Customer: " PARTNER_CUSTOMER
+
 read -p "ENTER the PARTNER_PROJECT: " PARTNER_PROJECT
-read -p "ENTER the Customer A: " CUSTOMER_A
 read -p "ENTER the PROJECT A: " PROJECT_A
-read -p "ENTER the Customer B: " CUSTOMER_B
 read -p "ENTER the PROJECT B: " PROJECT_B
+
+read -p "ENTER the PARTNER Customer: " PARTNER_CUSTOMER
+read -p "ENTER the Customer A: " CUSTOMER_A
+read -p "ENTER the Customer B: " CUSTOMER_B
+
 
 echo "======================================================================"
 echo "                    Task 1. Create authorized views"
