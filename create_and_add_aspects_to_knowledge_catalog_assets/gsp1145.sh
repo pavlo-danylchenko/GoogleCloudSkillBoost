@@ -10,9 +10,10 @@ gcloud services enable datacatalog.googleapis.com
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo $ZONE
-
 export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
+echo $ZONE
+echo $REGION
 
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
@@ -59,46 +60,38 @@ echo "                     Task 2. Create an aspect type"
 echo "======================================================================"
 cat > protected-data-aspect.json << EOF
 {
-  "displayName": "Protected Data Aspect",
-  "metadataTemplate": {
-    "name": "protected_data_aspect",
-    "type": "record",
-    "recordFields": [
-      {
-        "name": "protected_data_flag",
-        "index": 1,
-        "type": "enum",
-        "annotations": {
-          "displayName": "Protected Data Flag"
+  "name": "protected_data_aspect",
+  "type": "record",
+  "recordFields": [
+    {
+      "name": "protected_data_flag",
+      "index": 1,
+      "type": "enum",
+      "annotations": {
+        "displayName": "Protected Data Flag"
+      },
+      "constraints": {
+        "required": true
+      },
+      "enumValues": [
+        {
+          "name": "Yes",
+          "index": 1
         },
-        "constraints": {
-          "required": true
-        },
-        "enumValues": [
-          {
-            "name": "YES",
-            "index": 1,
-            "annotations": {
-              "displayName": "Yes"
-            }
-          },
-          {
-            "name": "NO",
-            "index": 2,
-            "annotations": {
-              "displayName": "No"
-            }
-          }
-        ]
-      }
-    ]
-  }
+        {
+          "name": "No",
+          "index": 2
+        }
+      ]
+    }
+  ]
 }
 EOF
 
 gcloud dataplex aspect-types create protected-data-aspect \
     --location=$REGION \
     --project=$DEVSHELL_PROJECT_ID \
+    --display-name="Protected Data Aspect" \
     --metadata-template-file-name=protected-data-aspect.json
 
 echo "======================================================================"
