@@ -90,9 +90,9 @@ echo "======================================================================"
 echo "    Task 4. Create and run the Continuous Integration (CI) pipeline"
 echo "======================================================================"
 cd ~/hello-cloudbuild-app
-git add .
-git commit -m "Trigger CI pipeline"
-git push http://giteaadmin:GiteaPassword123@${GIT_SERVER_IP}:3000/giteaadmin/hello-cloudbuild-app.git main
+# git add .
+# git commit -m "Trigger CI pipeline"
+# git push http://giteaadmin:GiteaPassword123@${GIT_SERVER_IP}:3000/giteaadmin/hello-cloudbuild-app.git main
 
 gcloud builds submit --config=cloudbuild.yaml --substitutions=SHORT_SHA=$(git rev-parse --short=7 HEAD) .
 
