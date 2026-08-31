@@ -27,7 +27,7 @@ echo "----------------------------------------------------------------------"
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
 export GIT_SERVER_IP=$(gcloud compute instances describe git-server \
-    --zone= --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+    --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
 echo "Git Server IP is: ${GIT_SERVER_IP}"
 
 echo "----------------------------------------------------------------------"
