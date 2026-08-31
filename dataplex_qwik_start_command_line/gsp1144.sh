@@ -56,7 +56,7 @@ gcloud dataplex assets create orders-curated-dataset \
     --discovery-enabled 
 
 
-read -p "Check the progress to verify the objective and Press [Enter] key to continue..."
+# read -p "Check the progress to verify the objective and Press [Enter] key to continue..."
 
 echo "======================================================================"
 echo "                   Task 4. Delete assets, zones, and lakes"
