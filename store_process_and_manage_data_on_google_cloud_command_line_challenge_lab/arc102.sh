@@ -43,7 +43,9 @@ PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID \
 # STORAGE_SA=$(gsutil kms serviceaccount -p $DEVSHELL_PROJECT_ID)
 # STORAGE_SA=$(gcloud storage service-agent --project=$DEVSHELL_PROJECT_ID)
 
-STORAGE_SA="service-$PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com"
+STORAGE_SA=$(gcloud storage service-agent --project="$DEVSHELL_PROJECT_ID" | tr -d '[:space:]')
+
+# STORAGE_SA="service-$PROJECT_NUMBER@gs-project-accounts.iam.gserviceaccount.com"
 EVENTARC_SA="service-$PROJECT_NUMBER@gcp-sa-eventarc.iam.gserviceaccount.com"
 PUBSUB_SA="service-$PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com"
 # PUBSUB_SA=$(gcloud storage service-agent --project=$DEVSHELL_PROJECT_ID)
@@ -54,6 +56,8 @@ echo "EVENTARC_SA: $EVENTARC_SA"
 echo "PUBSUB_SA: $PUBSUB_SA"
 echo "STORAGE_SA: $STORAGE_SA"
 echo "COMPUTE_SA: $COMPUTE_SA"
+
+sleep 15
 
 # Grant Compute Engine default service account Event Receiver role
 gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
@@ -76,11 +80,11 @@ gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
 
 sleep 25
 
-# read -p "ENTER the BUCKET NAME: " BUCKET_NAME
+read -p "ENTER the BUCKET NAME: " BUCKET_NAME
 read -p "ENTER the TOPIC NAME: " TOPIC_NAME
 read -p "ENTER the CLOUD RUN FUNCTION NAME: " CRF_NAME
 
-export BUCKET_NAME="memories-bucket-$DEVSHELL_PROJECT_ID"
+# export BUCKET_NAME="memories-bucket-$DEVSHELL_PROJECT_ID"
 # export CRF_NAME="memories-thumbnail-maker"
 
 
