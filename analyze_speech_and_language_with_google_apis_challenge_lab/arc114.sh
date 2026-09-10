@@ -32,7 +32,7 @@ KEY_NAME=$(gcloud services api-keys list --filter="display_name='API key 1'" --f
 API_KEY=$(gcloud services api-keys get-key-string $KEY_NAME --format="value(keyString)")
 
 
-gcloud compute instances add-metadata linux-instance \
+gcloud compute instances add-metadata lab-vm \
     --zone=$ZONE \
     --project=$DEVSHELL_PROJECT_ID \
     --metadata=API_KEY=$API_KEY
