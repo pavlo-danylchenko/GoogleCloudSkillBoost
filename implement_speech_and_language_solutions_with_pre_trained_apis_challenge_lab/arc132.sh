@@ -7,16 +7,6 @@ echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
 
-# echo "Enter the Following Details..."
-# read -p "Enter INSTANCE NAME: " INSTANCE_NAME
-# read -p "Enter task_2_file_name: " FILE_NAME
-# read -p "Enter task_3_request_file: " REQUEST_FILE
-# read -p "Enter task_3_response_file: " RESPONSE_FILE
-# read -p "Enter task_4_sentence: " SENTENCE
-# read -p "Enter task_4_file: " FILE_NAME_2
-# read -p "Enter task_5_sentence: " SENTENCE_2
-# read -p "Enter task_5_file: " FILE_NAME_3
-
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
@@ -36,7 +26,7 @@ gcloud services api-keys create \
     --api-target=service=language.googleapis.com \
     --api-target=service=speech.googleapis.com \
     --api-target=service=texttospeech.googleapis.com \
-    --api-target=service=translation.googleapis.com
+    --api-target=service=translate.googleapis.com
 
 sleep 5
 
@@ -49,8 +39,6 @@ gcloud compute instances add-metadata lab-vm \
     --project=$DEVSHELL_PROJECT_ID \
     --metadata=API_KEY=$API_KEY
 
-# 1. Enable the required services for API keys management
-# gcloud services enable apikeys.googleapis.com texttospeech.googleapis.com speech.googleapis.com
 
 cat > start.sh << 'EOF'
 source venv/bin/activate
@@ -58,7 +46,7 @@ source venv/bin/activate
 export API_KEY=$(curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/attributes/API_KEY)
 echo "API Key retrieved from metadata: $API_KEY"
 
-cat > synthesize-text.json EOF_1
+cat > synthesize-text.json << EOF_1
 {
     'input':{
         'text':'Cloud Text-to-Speech API allows developers to include
@@ -165,10 +153,21 @@ curl -X POST \
     -d @tr.json "https://translation.googleapis.com/language/translate/v2?key=${API_KEY}" \
     > translation_response.txt
 
+
 echo "======================================================================"
 echo "       Task 5. Detect a language with the Cloud Translation API"
 echo "======================================================================"
-TEXT="Este%é%japonês."
+cat > detect.json << EOF_5
+{
+  "q": "Este%é%japonês.",
+  "format": "text"
+}
+EOF_5
+
+curl -X POST \
+    -H "Content-Type: application/json" \
+    -d @detect.json "https://translation.googleapis.com/language/translate/v2/detect?key=${API_KEY}" \
+    > detection_response.txt
 
 curl "https://translation.googleapis.com/language/translate/v2/detect?key=${API_KEY}&q=${TEXT}" \
     > detection_response.txt
