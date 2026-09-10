@@ -22,12 +22,12 @@ echo "======================================================================"
 echo "                        Task 1. Create an API key"
 echo "======================================================================"
 gcloud services api-keys create \
-    --display-name="APIKey" \
+    --display-name="API key 1" \
     --api-target=service=speech.googleapis.com
 
 sleep 5
 
-KEY_NAME=$(gcloud services api-keys list --filter="display_name=APIKey" --format="value(name)")
+KEY_NAME=$(gcloud services api-keys list --filter="display_name='API key 1'" --format="value(name)")
 API_KEY=$(gcloud services api-keys get-key-string $KEY_NAME --format="value(keyString)")
 
 
@@ -44,7 +44,7 @@ echo "API Key retrieved from metadata: $API_KEY"
 echo "======================================================================"
 echo "             Task 2. Transcribe speech to English text"
 echo "======================================================================"
-cat > speech_request_en.json << EOF_1
+cat > speech_request.json << EOF_1
 {
   "config": {
       "encoding":"LINEAR16",
@@ -59,7 +59,7 @@ EOF_1
 
 curl -s -X POST \
     -H "Content-Type: application/json" \
-    -d @speech_request_en.json \
+    -d @speech_request.json \
     "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" \
     > response.json
 
@@ -67,7 +67,7 @@ curl -s -X POST \
 echo "======================================================================"
 echo "               Task 3. Transcribe speech to Spanish text"
 echo "======================================================================"
-cat > request_sp.json << EOF_3
+cat > request_speech_sp.json << EOF_3
 {
   "config": {
       "encoding":"FLAC",
@@ -81,9 +81,9 @@ EOF_3
 
 curl -s -X POST \
     -H "Content-Type: application/json" \
-    -d @request_sp.json \
+    -d @request_speech_sp.json \
     "https://speech.googleapis.com/v1/speech:recognize?key=${API_KEY}" \
-    > response_speech_sp.json
+    > speech_response_sp.json
 EOF
 
 # To execute once:
