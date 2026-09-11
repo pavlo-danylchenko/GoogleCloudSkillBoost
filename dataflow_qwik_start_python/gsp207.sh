@@ -8,13 +8,12 @@ echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
 
-gcloud services enable \
-    pubsub.googleapis.com \
-    storage.googleapis.com \
-    appengine.googleapis.com \
-    cloudscheduler.googleapis.com \
-    --project=$DEVSHELL_PROJECT_ID
-
+# gcloud services enable \
+#     pubsub.googleapis.com \
+#     storage.googleapis.com \
+#     appengine.googleapis.com \
+#     cloudscheduler.googleapis.com \
+#     --project=$DEVSHELL_PROJECT_ID
 
 echo "----------------------------------------------------------------------"
 echo "         Ensure that the Dataflow API is successfully enabled"
