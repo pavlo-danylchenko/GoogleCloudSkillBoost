@@ -39,14 +39,15 @@ gcloud scheduler jobs create pubsub cron-scheduler-job \
     --message-body="Hello World!" \
     --location=$REGION
 
-sleep 10
+sleep 30
 
 
 echo "======================================================================"
 echo "             Task 3. Verify the results in Cloud Pub/Sub"
 echo "======================================================================"
 gcloud pubsub subscriptions pull cloud-pubsub-subscription --limit 5
- 
+
+
 echo "======================================================================"
 echo "                          JOB is DONE !!!"
 echo "======================================================================"
