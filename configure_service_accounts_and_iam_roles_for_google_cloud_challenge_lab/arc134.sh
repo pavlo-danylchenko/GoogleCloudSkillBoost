@@ -17,9 +17,14 @@ cat > start.sh << 'EOF'
 echo "======================================================================"
 echo "        Task 2. Create a service account using the gcloud CLI"
 echo "======================================================================"
-gcloud auth login
+
+gcloud auth login --quiet
+
+export DEVSHELL_PROJECT_ID=$(gcloud config get-value project)
+
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
 
 gcloud iam service-accounts create devops \
     --display-name devops \
@@ -108,6 +113,12 @@ gcloud compute ssh lab-vm \
 
 
 cat > start_cloudsql.sh << 'EOF'
+export DEVSHELL_PROJECT_ID=$(gcloud config get-value project)
+
+export ZONE=$(gcloud compute project-info describe \
+    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
+export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
 BQ_SA=$(gcloud iam service-accounts list \
     --format="value(email)" \
     --filter "displayName='BigQuery User'")
