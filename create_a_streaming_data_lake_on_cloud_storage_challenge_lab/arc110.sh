@@ -11,10 +11,18 @@ echo "======================================================================"
 gcloud services enable \
     pubsub.googleapis.com \
     storage.googleapis.com \
-    dataflow.googleapis.com \
     appengine.googleapis.com \
     cloudscheduler.googleapis.com \
     --project=$DEVSHELL_PROJECT_ID
+
+gcloud services disable dataflow.googleapis.com --project $DEVSHELL_PROJECT_ID --force
+gcloud services enable dataflow.googleapis.com --project $DEVSHELL_PROJECT_ID
+
+export PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID --format="value(projectNumber)")
+
+gcloud projects add-iam-policy-binding $DEVSHELL_PROJECT_ID \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@dataflow-service-producer-prod.iam.gserviceaccount.com" \
+  --role="roles/dataflow.serviceAgent"
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
@@ -27,8 +35,11 @@ gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 gcloud config set run/region $REGION
 
-export TOPIC_NAME=topic1
+export TOPIC_MESSAGE="Hello!"
 export BUCKET_NAME=$DEVSHELL_PROJECT_ID-bucket
+
+read -p "ENTER the TOPIC NAME: " TOPIC_NAME
+read -p "ENTER the TOPIC MESSAGE: " TOPIC_MESSAGE
 
 echo "======================================================================"
 echo "                    Task 1. Create a Pub/Sub topic"
@@ -45,7 +56,7 @@ gcloud app create --region=$REGION
 gcloud scheduler jobs create pubsub cron-scheduler-job \
     --schedule="* * * * *" \
     --topic=$TOPIC_NAME \
-    --message-body="Hello World!" \
+    --message-body=$TOPIC_MESSAGE \
     --location=$REGION
 
 gcloud scheduler jobs run cron-scheduler-job \
@@ -64,7 +75,7 @@ gcloud storage buckets create gs://$BUCKET_NAME \
 echo "======================================================================"
 echo "Task 4. Run a Dataflow pipeline to stream data from a Pub/Sub topic to Cloud Storage"
 echo "======================================================================"
-docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.7 /bin/bash
+# docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.7 /bin/bash
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 cd python-docs-samples/pubsub/streaming-analytics
 pip install -U -r requirements.txt  # Install Apache Beam dependencies
