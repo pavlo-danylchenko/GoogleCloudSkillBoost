@@ -115,13 +115,7 @@ gcloud compute ssh lab-vm \
 cat > start_cloudsql.sh << 'EOF'
 export DEVSHELL_PROJECT_ID=$(gcloud config get-value project)
 
-export ZONE=$(gcloud compute project-info describe \
-    --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
-
-BQ_SA=$(gcloud iam service-accounts list \
-    --format="value(email)" \
-    --filter "displayName='BigQuery User'")
+BQ_SA=bigquery-qwiklab@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com
 
 sudo apt install python3 python3-pip python3.11-venv -y
 python3 -m venv myvenv
@@ -131,11 +125,12 @@ sudo apt-get install -y git python3-pip
 pip3 install --upgrade pip
 pip3 install google-cloud-bigquery pyarrow pandas db-dtypes
 
-cat > query.sql << EOF_1
+
+echo "
 from google.auth import compute_engine
 from google.cloud import bigquery
 credentials = compute_engine.Credentials(
-    service_account_email="$BQ_SA")
+    service_account_email='$BQ_SA')
 query = '''
 SELECT name, SUM(number) as total_people
 FROM "bigquery-public-data.usa_names.usa_1910_2013"
@@ -145,10 +140,10 @@ ORDER BY total_people DESC
 LIMIT 20
 '''
 client = bigquery.Client(
-    project=$DEVSHELL_PROJECT_ID',
+    project='$DEVSHELL_PROJECT_ID',
     credentials=credentials)
 print(client.query(query).to_dataframe())
-EOF_1
+" > query.py
 
 python3 query.py
 
