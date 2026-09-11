@@ -29,6 +29,7 @@ echo "               Task 2. Download the Hello World app"
 echo "======================================================================"
 gcloud compute ssh lab-setup \
     --zone=$ZONE \
+    --tunnel-through-iap \
     --project=$DEVSHELL_PROJECT_ID \
     --quiet \
     --command="git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git"
