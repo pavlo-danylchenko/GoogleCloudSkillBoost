@@ -46,17 +46,19 @@ gcloud storage buckets create gs://$BUCKET_NAME \
 echo "======================================================================"
 echo "              Task 2. Install the Apache Beam SDK for Python"
 echo "======================================================================"
-docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.12 /bin/bash
+# docker run -it -e DEVSHELL_PROJECT_ID=$DEVSHELL_PROJECT_ID python:3.12 /bin/bash
 
+pip install 'apache-beam[gcp]'==2.67.0
 
 echo "======================================================================"
 echo "           Task 3. Run an example Dataflow pipeline remotely"
 echo "======================================================================"
+
 python -m apache_beam.examples.wordcount --project $DEVSHELL_PROJECT_ID \
   --runner DataflowRunner \
-  --staging_location $BUCKET_NAME/staging \
-  --temp_location $BUCKET_NAME/temp \
-  --output $BUCKET_NAME/results/output \
+  --staging_location=gs://$BUCKET_NAME/staging \
+  --temp_location=gs://$BUCKET_NAME/temp \
+  --output=gs://$BUCKET_NAME/results/output \
   --region=$REGION \
   --worker_machine_type=e2-standard-2
 
