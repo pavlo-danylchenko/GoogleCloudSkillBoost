@@ -72,6 +72,14 @@ echo "======================================================================"
 gcloud pubsub topics publish $TOPIC_NAME \
     --message='{"data": "73.4 F"}'
 
+sleep 10
+
+bq query --use_legacy_sql=false \
+"SELECT *
+ FROM \`$DEVSHELL_PROJECT_ID.$DATASET_NAME.$TABLE_NAME\`
+ LIMIT 10"
+
+
 echo "======================================================================"
 echo "                          JOB is DONE !!!"
 echo "======================================================================"
