@@ -65,7 +65,7 @@ echo "                   Upload output to Cloud Storage"
 echo "----------------------------------------------------------------------"
 gcloud storage cp text-response.json gs://$BUCKET_NAME/
 
-sed -i "s/TEXT_DETECTION/LANDMARK_DETECTION/g" text-response.json
+sed -i "s/TEXT_DETECTION/LANDMARK_DETECTION/g" request.json
 
 curl -s -X POST \
     -H "Content-Type: application/json" \
