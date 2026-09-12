@@ -35,7 +35,7 @@ gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID-bucket/manif-des-sans-papi
 echo "======================================================================"
 echo "                  Task 2. Create Request.json file"
 echo "======================================================================"
-cat request.json << EOF
+cat > request.json << EOF
 {
   "requests": [
       {
