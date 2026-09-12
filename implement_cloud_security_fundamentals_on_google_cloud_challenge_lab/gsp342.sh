@@ -44,6 +44,7 @@ echo "              Task 2. Create a service account"
 echo "======================================================================"
 gcloud iam service-accounts create $SA_NAME --display-name "Orca Private Cluster Service Account"
 
+sleep 10
 
 
 echo "======================================================================"
@@ -82,8 +83,8 @@ gcloud container clusters create $CLUSTER_NAME \
     --service-account $SA_NAME@$DEVSHELL_PROJECT_ID.iam.gserviceaccount.com \
     --zone $ZONE
 
-
 sleep 15
+
 
 echo "======================================================================"
 echo " Task 5. Deploy an application to a private Kubernetes Engine cluster"
@@ -92,7 +93,12 @@ gcloud compute ssh orca-jumphost \
     --zone=$ZONE \
     --project=$DEVSHELL_PROJECT_ID \
     --quiet \
-    --command="gcloud config set compute/zone $ZONE && gcloud container clusters get-credentials $CLUSTER_NAME --internal-ip && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin && kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 && kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080"
+    --command="gcloud config set compute/zone $ZONE && \
+        gcloud container clusters get-credentials $CLUSTER_NAME --internal-ip && \
+        sudo apt-get update \
+        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin && \
+        kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 && \
+        kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080"
 
 echo "======================================================================"
 echo "                           JOB is DONE !"
