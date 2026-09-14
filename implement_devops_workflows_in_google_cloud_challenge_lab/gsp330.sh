@@ -133,7 +133,7 @@ echo "======================================================================"
 echo "----------------------------------------------------------------------"
 echo "               Build the first development deployment"
 echo "----------------------------------------------------------------------"
-sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0/g" "$file" \
+sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0/g" \
     ./dev/deployment.yaml
 
 git checkout dev
@@ -154,7 +154,7 @@ kubectl expose deployment development-deployment \
 echo "----------------------------------------------------------------------"
 echo "               Build the first production deployment"
 echo "----------------------------------------------------------------------"
-sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0/g" "$file" \
+sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0/g" \
     ./prod/deployment.yaml
 
 git checkout master
