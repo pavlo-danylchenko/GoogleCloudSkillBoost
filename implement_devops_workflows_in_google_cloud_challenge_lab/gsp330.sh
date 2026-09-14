@@ -88,6 +88,7 @@ echo "======================================================================"
 echo "     Task 2. Connect to the Git repository on the Git server"
 echo "======================================================================"
 cd ~
+mkdir sample-app
 gcloud storage cp -r gs://spls/gsp330/sample-app/* sample-app
 
 for file in sample-app/cloudbuild-dev.yaml sample-app/cloudbuild.yaml; do
@@ -133,8 +134,8 @@ echo "======================================================================"
 echo "----------------------------------------------------------------------"
 echo "               Build the first development deployment"
 echo "----------------------------------------------------------------------"
-sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0/g" \
-    ./dev/deployment.yaml
+sed -i "s|<todo>|$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0|g" \
+    dev/deployment.yaml
 
 git checkout dev
 git add .
@@ -144,7 +145,7 @@ git push http://giteaadmin:GiteaPassword123@${GIT_SERVER_IP}:3000/giteaadmin/sam
 gcloud builds submit --config=cloudbuild-dev.yaml .
 
 kubectl expose deployment development-deployment \
-    --namespace=prod \
+    --namespace=dev \
     --name=dev-deployment-service \
     --type=LoadBalancer \
     --port=8080 \
@@ -154,13 +155,13 @@ kubectl expose deployment development-deployment \
 echo "----------------------------------------------------------------------"
 echo "               Build the first production deployment"
 echo "----------------------------------------------------------------------"
-sed -i "s/<todo>/$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0/g" \
-    ./prod/deployment.yaml
+sed -i "s|<todo>|$REGION-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild:v1.0|g" \
+    prod/deployment.yaml
 
 git checkout master
 git add .
 git commit -m "Deploy v1.0 on master"
-git push http://giteaadmin:GiteaPassword123@${GIT_SERVER_IP}:3000/giteaadmin/sample-app.git masters
+git push http://giteaadmin:GiteaPassword123@${GIT_SERVER_IP}:3000/giteaadmin/sample-app.git master
 
 gcloud builds submit --config=cloudbuild.yaml .
 
