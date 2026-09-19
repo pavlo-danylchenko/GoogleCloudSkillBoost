@@ -32,7 +32,7 @@ gcloud config set compute/region $REGION
 # echo "----------------------------------------------------------------------"
 # bq query --use_legacy_sql=false \
 # "
-# SLECT end_station_name
+# SELECT end_station_name
 # FROM \`bigquery-public-data.london_bicycles.cycle_hire\`;
 # "  > /dev/null
 
@@ -150,11 +150,11 @@ gcloud sql instances create my-demo \
     --cpu=4 \
     --memory=16GB \
     --database-version=MYSQL_8_0 \
-    --region=$REGION \
     --zone=$ZONE \
     --availability-type=regional \
     --storage-size=100 \
     --root-password=$ROOT_PASSWORD \
+    --enable-bin-log \
     --quiet
 #   --tier=db-custom-4-16384 \
 
@@ -172,14 +172,39 @@ echo "----------------------------------------------------------------------"
 gcloud sql databases create bike \
     --instance=my-demo
 
-echo "----------------------------------------------------------------------"
-echo "                           Create a table"
-echo "----------------------------------------------------------------------"
+# echo "----------------------------------------------------------------------"
+# echo "                           Create a table"
+# echo "----------------------------------------------------------------------"
+# cat > setup.sql << EOF
+# USE bike;
 
+# CREATE TABLE IF NOT EXISTS london1 (
+#     start_station_name VARCHAR(255),
+#     num INT
+# );
+
+# CREATE TABLE IF NOT EXISTS london2 (
+#     end_station_name VARCHAR(255),
+#     num INT
+# );
+# EOF
+
+# gcloud sql connect my-demo \
+#     --user=root \
+#     --quiet \
+#     < setup.sql
 
 # echo "======================================================================"
 # echo "                 Task 7. Upload CSV files to tables"
 # echo "======================================================================"
+# export SQL_SA=$(gcloud sql instances describe my-demo \
+#   --format="value(serviceAccountEmailAddress)")
+
+# gcloud storage buckets add-iam-policy-binding \
+#   gs://$DEVSHELL_PROJECT_ID \
+#   --member="serviceAccount:$SQL_SA" \
+#   --role="roles/storage.objectAdmin"
+
 # gcloud sql import csv my-demo gs://$DEVSHELL_PROJECT_ID/start_station_name.csv \
 #     --database=bike \
 #     --table=london1 \
@@ -193,11 +218,7 @@ echo "----------------------------------------------------------------------"
 # echo "======================================================================"
 # echo "                Task 8. Run data queries in Cloud SQL"
 # echo "======================================================================"
-# gcloud sql db query bike \
-#     --instance=my-demo \
-#     --use-main-password \
-#     --quiet \
-#     -e '
+# cat > operations.sql << EOF
 # DELETE FROM london1 WHERE num=0;
 # DELETE FROM london2 WHERE num=0;
 # INSERT INTO london1 (start_station_name, num) VALUES ("test destination", 1);
@@ -205,7 +226,12 @@ echo "----------------------------------------------------------------------"
 # UNION
 # SELECT end_station_name, num FROM london2 WHERE num>100000
 # ORDER BY top_stations DESC;
-# ' <<< "$ROOT_PASSWORD"
+# EOF
+
+# gcloud sql connect my-demo \
+#     --user=root \
+#     --quiet \
+#     < operations.sql
 
 echo "======================================================================"
 echo "                         JOB is DONE !!!"
