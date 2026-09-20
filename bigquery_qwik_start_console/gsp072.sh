@@ -17,7 +17,7 @@ echo "======================================================================"
 echo "======================================================================"
 echo "                 Task 2. Query a public dataset"
 echo "======================================================================"
-bq query --use_legace_sql=false \
+bq query --use_legacy_sql=false \
 '
 #standardSQL
 SELECT
@@ -46,16 +46,16 @@ echo "======================================================================"
 echo "                     Task 6. Query a custom dataset"
 echo "======================================================================"
 bq query --use_legacy_sql=false \
-'
+"
 #standardSQL
 SELECT
  name, count
 FROM
- `babynames.names_2014`
+ \`babynames.names_2014\`
 WHERE
- gender = "M"
+ gender = 'M'
 ORDER BY count DESC LIMIT 5;
-'
+"
 
 
 echo "======================================================================"
