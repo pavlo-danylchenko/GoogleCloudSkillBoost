@@ -56,7 +56,7 @@ gcloud app create --region=$REGION
 gcloud scheduler jobs create pubsub cron-scheduler-job \
     --schedule="* * * * *" \
     --topic=$TOPIC_NAME \
-    --message-body=$TOPIC_MESSAGE \
+    --message-body="$TOPIC_MESSAGE" \
     --location=$REGION
 
 gcloud scheduler jobs run cron-scheduler-job \
