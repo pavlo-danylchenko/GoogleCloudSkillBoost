@@ -29,14 +29,11 @@ echo "======================================================================"
 git clone https://github.com/GoogleCloudPlatform/golang-samples.git
 cd golang-samples/appengine/go11x/helloworld
 
-sed -i 's/^runtime: php.*/runtime: php83/' app.yaml
-grep runtime app.yaml
-
 
 echo "======================================================================"
 echo "                 Task 3. Deploy your app"
 echo "======================================================================"
-sudo apt-get install google-cloud-sdk-app-engine-go
+sudo apt-get install google-cloud-cli-app-engine-go
 
 gcloud app create --project=$PROJECT_ID --region=$REGION
 gcloud app deploy --project $PROJECT_ID --quiet
