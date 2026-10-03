@@ -59,7 +59,7 @@ echo "======================================================================"
 #             ],
 #             "image": {
 #                 "source": {
-#                     "imageUri": "gs://$BUCKET_NAME/demo-image.jpg"
+#                     "gcsImageUri": "gs://$BUCKET_NAME/demo-image.jpg"
 #                 }
 #             }
 #         }
