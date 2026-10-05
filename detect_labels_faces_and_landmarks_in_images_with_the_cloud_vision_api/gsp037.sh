@@ -8,9 +8,11 @@ echo "======================================================================"
 
 export ZONE=$(gcloud compute project-info describe \
     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-echo $ZONE
-
 export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
+
+echo $ZONE
+echo $REGION
+
 gcloud config set compute/zone $ZONE
 gcloud config set compute/region $REGION
 
@@ -18,18 +20,21 @@ gcloud config set compute/region $REGION
 echo "======================================================================"
 echo "                        Task 1. Create an API key"
 echo "======================================================================"
-gcloud alpha services api-keys create \
-    --display-name="APIkey"
+gcloud services api-keys create \
+  --display-name="APIkey" \
+  --api-target=service=vision.googleapis.com
 
-KEY_NAME=$(gcloud alpha services api-keys list --filter="display_name=APIkey" --format="value(name)")
-API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
-
+export KEY_UID=$(gcloud services api-keys list --filter="display_name=APIkey" --format="value(uid)")
+export API_KEY=$(gcloud services api-keys get-key-string $KEY_UID --format="value(keyString)")
 
 echo "======================================================================"
 echo "              Task 2. Upload an image to a Cloud Storage bucket"
 echo "======================================================================"
 export BUCKET_NAME=$DEVSHELL_PROJECT_ID-bucket
-gsutil mb gs://$BUCKET_NAME
+# gsutil mb gs://$BUCKET_NAME
+
+gcloud storage buckets create gs://$BUCKET_NAME \
+  --no-public-access-prevention
 
 FILES=("city.png" "donuts.png" "selfie.png")
 
@@ -38,7 +43,12 @@ do
     echo "Uploading file: $FILE"
     curl -LO "https://raw.githubusercontent.com/pavlo-danylchenko/GoogleCloudSkillBoost/main/detect_labels_faces_and_landmarks_in_images_with_the_cloud_vision_api/$FILE"
     gsutil cp "$FILE" gs://$BUCKET_NAME
-    gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME
+    
+    gcloud storage objects update gs://$BUCKET_NAME/$FILE \
+      --add-acl-grant=entity=allUsers,role=READER
+    
+    # gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME/$FILE
+    # gsutil acl ch -u AllUsers:R gs://$BUCKET_NAME/$FILE
 done
 
 
@@ -51,7 +61,7 @@ cat > request.json << EOF
       {
         "image": {
           "source": {
-              "gcsImageUri": "gs://$BUCKET_NAME-bucket/donuts.png"
+              "gcsImageUri": "gs://$BUCKET_NAME/donuts.png"
           }
         },
         "features": [
@@ -82,7 +92,7 @@ cat > request.json << EOF
       {
         "image": {
           "source": {
-              "gcsImageUri": "gs://$BUCKET_NAME-bucket/donuts.png"
+              "gcsImageUri": "gs://$BUCKET_NAME/donuts.png"
           }
         },
         "features": [
@@ -109,7 +119,7 @@ cat > request.json << EOF
       {
         "image": {
           "source": {
-              "gcsImageUri": "gs://$BUCKET_NAME-bucket/selfie.png"
+              "gcsImageUri": "gs://$BUCKET_NAME/selfie.png"
           }
         },
         "features": [
@@ -138,7 +148,7 @@ cat > request.json << EOF
       {
         "image": {
           "source": {
-              "gcsImageUri": "gs://$BUCKET_NAME-bucket/city.png"
+              "gcsImageUri": "gs://$BUCKET_NAME/city.png"
           }
         },
         "features": [
@@ -154,7 +164,6 @@ EOF
 
 curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json  \
     https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}
-
 
 
 echo "======================================================================"
