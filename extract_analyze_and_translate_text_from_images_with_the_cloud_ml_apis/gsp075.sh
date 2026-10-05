@@ -5,14 +5,6 @@ echo "======================================================================"
 echo "            Task 0. Detecting project IDs, regions and zones"
 echo "                     Setting up the environment"
 echo "======================================================================"
-export PROJECT_ID=$(gcloud config get-value project)
-
-# export ZONE=$(gcloud compute project-info describe \
-#     --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
-# echo $ZONE
-
-# export REGION=$(echo $ZONE | cut -d '-' -f 1-2)
-
 
 echo "======================================================================"
 echo "              Task 00. Enable the Cloud Natural Language API"
@@ -24,48 +16,45 @@ echo "======================================================================"
 echo "======================================================================"
 echo "                    Task 1. Create an API key"
 echo "======================================================================"
-gcloud services api-keys create --display-name="APIkey"
+gcloud services api-keys create \
+  --display-name="APIkey" \
+  --api-target=service=language.googleapis.com \
+  --api-target=service=vision.googleapis.com \
+  --api-target=service=translate.googleapis.com
 
 sleep 2
 
 export KEY_UID=$(gcloud services api-keys list --filter="display_name=APIkey" --format="value(uid)")
 export API_KEY=$(gcloud services api-keys get-key-string $KEY_UID --format="value(keyString)")
 
-# Get instance zone
-# export ZONE=$(gcloud compute instances list --project=$DEVSHELL_PROJECT_ID \
-#     --format="value(ZONE)")
+# gcloud services api-keys update $KEY_UID \
+#   --api-target=service=language.googleapis.com \
+#   --api-target=service=vision.googleapis.com \
+#   --api-target=service=translate.googleapis.com
 
 
 echo "======================================================================"
 echo "           Task 2. Upload an image to a Cloud Storage bucket"
 echo "======================================================================"
-
 echo "----------------------------------------------------------------------"
 echo "                 Create a Cloud Storage bucket"
 echo "----------------------------------------------------------------------"
-# gcloud storage buckets create gs://$PROJECT_ID-bucket \
-#   --location=$REGION \
-#   --no-public-access-prevention
+export BUCKET_NAME=$DEVSHELL_PROJECT_ID-bucket
 
-gcloud storage buckets create gs://$PROJECT_ID-bucket \
+gcloud storage buckets create gs://$BUCKET_NAME \
   --no-public-access-prevention
 
 echo "----------------------------------------------------------------------"
 echo "                 Upload an image to your bucket"
 echo "----------------------------------------------------------------------"
-
 curl -LO "https://github.com/pavlo-danylchenko/GoogleCloudSkillBoost/blob/main/extract_analyze_and_translate_text_from_images_with_the_cloud_ml_apis/sign.jpg?raw=true"
-gsutil cp sign.jpg gs://$PROJECT_ID-bucket/
-
+gsutil cp sign.jpg gs://$BUCKET_NAME/
 
 echo "----------------------------------------------------------------------"
 echo "                Allow the file to be viewed publicly"
 echo "----------------------------------------------------------------------"
-gsutil acl ch -u AllUsers:R gs://$PROJECT_ID-bucket/sign.jpg
-
-# gcloud storage objects add-iam-policy-binding gs://$PROJECT_ID-bucket/sign.jpg \
-#     --member="allUsers" \
-#     --role="roles/storage.objectViewer"
+gcloud storage objects update gs://$BUCKET_NAME/sign.jpg \
+    --add-acl-grant=entity=allUsers,role=READER
 
 
 echo "======================================================================"
@@ -77,7 +66,7 @@ cat > ocr-request.json << EOF
       {
         "image": {
           "source": {
-              "gcsImageUri": "gs://$PROJECT_ID-bucket/sign.jpg"
+              "gcsImageUri": "gs://$BUCKET_NAME/sign.jpg"
           }
         },
         "features": [
@@ -95,11 +84,11 @@ echo "======================================================================"
 echo "               Task 4. Call the text detection method"
 echo "======================================================================"
 curl -s -X POST -H "Content-Type: application/json" \
-  --data-binary @ocr-request.json  https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}
+  --data-binary @ocr-request.json https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}
 
 
 curl -s -X POST -H "Content-Type: application/json" \
-  --data-binary @ocr-request.json  https://vision.googleapis.com/v1/images:annotate?key=${API_KEY} -o ocr-response.json
+  --data-binary @ocr-request.json https://vision.googleapis.com/v1/images:annotate?key=${API_KEY} -o ocr-response.json
 
 
 echo "======================================================================"
@@ -140,7 +129,8 @@ STR=$(jq .data.translations[0].translatedText  translation-response.json) \
 
 
 curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @nl-request.json
+  -s -X POST -H "Content-Type: application/json" --data-binary @nl-request.json \
+  -o nl-response.json
 
 
 echo "======================================================================"
