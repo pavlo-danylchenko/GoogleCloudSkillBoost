@@ -11,11 +11,12 @@ export REGION=$(gcloud compute project-info describe \
 gcloud config set compute/region $REGION
 
 gcloud services api-keys create \
-    --display-name="APIkey"
+    --display-name="APIkey" \
+    --api-target=service=translate.googleapis.com
 
 
-KEY_NAME=$(gcloud alpha services api-keys list --filter="display_name=APIkey" --format="value(name)")
-API_KEY=$(gcloud alpha services api-keys get-key-string $KEY_NAME --format="value(keyString)")
+KEY_NAME=$(gcloud services api-keys list --filter="display_name=APIkey" --format="value(name)")
+API_KEY=$(gcloud services api-keys get-key-string $KEY_NAME --format="value(keyString)")
 
 echo "======================================================================"
 echo "                        Task 2. Translate text"
@@ -30,3 +31,8 @@ echo "======================================================================"
 TEXT_ONE="Meu%20nome%20é%20Steven"
 TEXT_TWO="日本のグーグルのオフィスは、東京の六本木ヒルズにあります"
 curl -X POST "https://translation.googleapis.com/language/translate/v2/detect?key=${API_KEY}" -d "q=${TEXT_ONE}" -d "q=${TEXT_TWO}"
+
+
+echo "======================================================================"
+echo "                         JOB id DONE !!!"
+echo "======================================================================"
